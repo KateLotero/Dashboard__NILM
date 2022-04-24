@@ -50,6 +50,9 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
+const Elect = React.lazy(() => import('./views/elect/Elect'))
+
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -75,7 +78,9 @@ const routes = [
   { path: '/buttons/buttons', name: 'Buttons', element: Buttons },
   { path: '/buttons/dropdowns', name: 'Dropdowns', element: Dropdowns },
   { path: '/buttons/button-groups', name: 'Button Groups', element: ButtonGroups },
+
   { path: '/charts', name: 'Charts', element: Charts },
+
   { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   { path: '/forms/form-control', name: 'Form Control', element: FormControl },
   { path: '/forms/select', name: 'Select', element: Select },
@@ -85,16 +90,22 @@ const routes = [
   { path: '/forms/floating-labels', name: 'Floating Labels', element: FloatingLabels },
   { path: '/forms/layout', name: 'Layout', element: Layout },
   { path: '/forms/validation', name: 'Validation', element: Validation },
+
   { path: '/icons', exact: true, name: 'Icons', element: CoreUIIcons },
   { path: '/icons/coreui-icons', name: 'CoreUI Icons', element: CoreUIIcons },
   { path: '/icons/flags', name: 'Flags', element: Flags },
   { path: '/icons/brands', name: 'Brands', element: Brands },
+
   { path: '/notifications', name: 'Notifications', element: Alerts, exact: true },
   { path: '/notifications/alerts', name: 'Alerts', element: Alerts },
   { path: '/notifications/badges', name: 'Badges', element: Badges },
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
+
   { path: '/widgets', name: 'Widgets', element: Widgets },
+  
+  { path: '/elect', name: 'Elect', element: Elect},
+  
 ]
 
 export default routes

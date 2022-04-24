@@ -1,6 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
+  cibElectron,
   cilBell,
   cilCalculator,
   cilChartPie,
@@ -25,6 +26,14 @@ const _nav = [
       text: 'NEW',
     },
   },
+
+  {
+    component: CNavItem,
+    name: 'Electrodomésticos',
+    to: '/elect',
+    icon: <CIcon icon={cibElectron} customClassName="nav-icon" />,
+  },
+
   {
     component: CNavTitle,
     name: 'Theme',
