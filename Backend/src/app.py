@@ -26,7 +26,7 @@ CORS(app) # cors permite que el servidor de flask se comunique con el servidor d
 # Database
 Database = client.get_database('prueba')
 # collection
-db = Database.time_bucket
+db = Database.house_2
   
 
 #-------------Routes-------------
