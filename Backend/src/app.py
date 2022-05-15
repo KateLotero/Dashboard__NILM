@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-userName = os.getenv('USER')
+userName = os.getenv('USERK')
 password = os.getenv('PASSWORD')
 
 
@@ -26,7 +26,8 @@ CORS(app) # cors permite que el servidor de flask se comunique con el servidor d
 # Database
 Database = client.get_database('prueba')
 # collection
-db = Database.house_2
+db = Database.time_bucket
+#db = Database.house_2
   
 
 #-------------Routes-------------
