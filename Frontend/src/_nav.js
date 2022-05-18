@@ -2,13 +2,18 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
   cibElectron,
+  cifTv,
+  cilBattery0,
   cilBell,
   cilCalculator,
+  cilChart,
   cilChartPie,
   cilCursor,
   cilDrop,
+  cilHouse,
   cilNotes,
   cilPencil,
+  cilPhone,
   cilPuzzle,
   cilSpeedometer,
   cilStar,
@@ -31,7 +36,21 @@ const _nav = [
     component: CNavItem,
     name: 'Electrodomésticos',
     to: '/elect',
-    icon: <CIcon icon={cibElectron} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavItem,
+    name: 'Consumo total',
+    to: '/months',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavItem,
+    name: 'Estadísticas',
+    to: '/statis',
+    icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
   },
 
   {
