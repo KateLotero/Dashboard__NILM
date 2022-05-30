@@ -1,5 +1,6 @@
 from cgi import print_arguments
 from http import client
+from typing import final
 from unicodedata import name
 from flask import Flask, request, jsonify
 from flask_pymongo import pymongo
@@ -7,6 +8,7 @@ from bson.objectid import ObjectId
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 userName = os.getenv('USERK')
@@ -31,15 +33,29 @@ db = Database.house_2
   
 
 #-------------Routes-------------
-@app.route('/users', methods = ['POST']) #defino ruta para crear usuarios
-def createUser():
-    #print(request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
-    ida = db.insert_one({#En la colletion de users voy a insertar un nuevo dato
-    'name': request.json['name'],
-    'email': request.json['email'],
-    'password': request.json['password']
-    })
-    return jsonify(str(ida.inserted_id))
+@app.route('/date', methods = ['GET']) 
+def getbyDate():
+    startDay = datetime.datetime.fromisoformat(request.json['startDay'])
+    finalDay = datetime.datetime.fromisoformat(request.json['finalDay']+' 23:59:59')
+
+    print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
+    print('startDay',startDay,'finalDay',finalDay)
+    data = []
+    for doc in db.find({
+    'd': {
+        "$gte":(startDay),
+        "$lte":(finalDay),
+    }
+    }):data.append({
+            '_id': str(ObjectId(doc['_id'])),
+            'd': doc['d'],
+            'deviceId': doc['deviceId'],
+            'nsamples': doc['nsamples'],
+            'samples': doc['samples']
+        })
+    print(data)
+    return jsonify(data)
+
     
 @app.route('/allData', methods = ['GET']) #defino ruta para obtener todos los datos de una collection
 def getData():
@@ -69,32 +85,6 @@ def getElectro(appliance):
     print(data)
     return jsonify(data) #se retorna la lista con todos los usuarios
 
-@app.route('/users/<id>', methods = ['GET']) #defino ruta para obtener 1 usuario a partir de un id dado
-def getUser(id):
-    user = db.find_one({'_id': ObjectId(id)}) # me devuelve toda la info de ese usuario
-    print(user)
-    return jsonify({                        # se retorna un json con la información del usuario
-      '_id': str(ObjectId(user['_id'])),
-      'name': user['name'],
-      'email': user['email'],
-      'password': user['password']
-  })
-
-@app.route('/users/<id>', methods = ['DELETE']) #defino ruta para eliminar usuario
-def deleteUser(id):
-    db.delete_one({'_id': ObjectId(id)})
-    return jsonify({'message': 'User Deleted'})
-
-@app.route('/users/<id>', methods = ['PUT']) #defino ruta para actualizar usuarios
-def updateUser(id):
-  print(request.json)
-  db.update_one({'_id': ObjectId(id)}, {"$set": {
-    'name': request.json['name'],
-    'email': request.json['email'],
-    'password': request.json['password']
-  }})
-  return jsonify({'message': 'User Updated'})
-    
 
 if __name__== "__main__":
     app.run(debug=True)

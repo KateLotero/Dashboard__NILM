@@ -41,7 +41,7 @@ const _nav = [
 
   {
     component: CNavItem,
-    name: 'Consumo total',
+    name: 'Histórico de datos',
     to: '/months',
     icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
   },
