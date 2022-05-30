@@ -1,45 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import {
-  CButton,
   CCard,
   CCardBody,
-  CCardFooter,
-  CCardGroup,
   CCardHeader,
   CCardImage,
-  CCardLink,
-  CCardSubtitle,
   CCardText,
   CCardTitle,
-  CListGroup,
-  CListGroupItem,
-  CNav,
-  CNavItem,
-  CNavLink,
   CCol,
   CRow,
 } from '@coreui/react'
-
-import CIcon from '@coreui/icons-react'
-import {
-  cibElectron,
-  cifTv,
-  cilBattery0,
-  cilBell,
-  cilCalculator,
-  cilChart,
-  cilChartPie,
-  cilCursor,
-  cilDrop,
-  cilHouse,
-  cilMoney,
-  cilNotes,
-  cilPencil,
-  cilPhone,
-  cilPuzzle,
-  cilSpeedometer,
-  cilStar,
-} from '@coreui/icons'
 
 import fridge from './../../assets/images/fridge2.jpg' // ./ me sirve para ubicarme en el directorio de este archivo
 import microwave from './../../assets/images/microwave.JPG' // ../ me devuelvo un directorio
@@ -205,273 +174,114 @@ const Elect = () => {
   //**************************************** page ****************************************/
   return (
     <>
-      <h1>Consumo por electrodoméstico en el mes anterior</h1>
       <CRow>
-        <CCol xs={6}>
-          <CCard className="mb-3" style={{ maxWidth: '500px' }}>
-            <CRow className="g-0">
-              <CCol md={4}>
-                <CCardImage src={fridge} />
+        <CCol>
+          <CCard xs={12} sm={12} md={12}>
+            <CCardHeader>Consumo de energía en el mes anterior</CCardHeader>
+            <CRow>
+              <CCol xs={12} sm={4} md={4}>
+                <CCard className="border border-3">
+                  <CCardImage orientation="top" src={fridge} style={{ maxBlockSize: '20rem' }} />
+                  <CCardBody>
+                    <CCardTitle>Nevera</CCardTitle>
+                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={lightning} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>240 kW/mes</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={money} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>35000 pesos</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                  </CCardBody>
+                </CCard>
               </CCol>
-              <CCol md={8}>
-                <CCardBody>
-                  <CCardTitle> Nevera</CCardTitle>
-
-                  <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                    <CRow className="g-0">
-                      <CCol md={4}>
-                        <CCardImage src={lightning} />
-                      </CCol>
-                      <CCol md={8}>
-                        <CCardBody>
-                          <CCardText>240 kW/mes</CCardText>
-                        </CCardBody>
-                      </CCol>
-                    </CRow>
-                  </CCard>
-
-                  <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                    <CRow className="g-0">
-                      <CCol md={4}>
-                        <CCardImage src={money} />
-                      </CCol>
-                      <CCol md={8}>
-                        <CCardBody>
-                          <CCardText>35000 pesos</CCardText>
-                        </CCardBody>
-                      </CCol>
-                    </CRow>
-                  </CCard>
-                </CCardBody>
+              <CCol xs={12} sm={4} md={4}>
+                <CCard className="border border-3">
+                  <CCardImage orientation="top" src={microwave} style={{ maxBlockSize: '20rem' }} />
+                  <CCardBody>
+                    <CCardTitle>Microondas</CCardTitle>
+                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={lightning} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>240 kW/mes</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={money} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>35000 pesos</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                  </CCardBody>
+                </CCard>
+              </CCol>
+              <CCol xs={12} sm={4} md={4}>
+                <CCard className="border border-3">
+                  <CCardImage
+                    orientation="top"
+                    src={washMachine}
+                    style={{ maxBlockSize: '20rem' }}
+                  />
+                  <CCardBody>
+                    <CCardTitle>Lavadora</CCardTitle>
+                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={lightning} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>240 kW/mes</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={money} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>35000 pesos</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                  </CCardBody>
+                </CCard>
               </CCol>
             </CRow>
           </CCard>
         </CCol>
-
-        <CCol xs={6}>
-          <CCard className="mb-3" style={{ maxWidth: '640px' }}>
-            <CRow className="g-0">
-              <CCol md={4}>
-                <CCardImage src={microwave} />
-              </CCol>
-              <CCol md={8}>
-                <CCardBody>
-                  <CCardTitle>Microondas</CCardTitle>
-
-                  <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                    <CRow className="g-0">
-                      <CCol md={4}>
-                        <CCardImage src={lightning} />
-                      </CCol>
-                      <CCol md={8}>
-                        <CCardBody>
-                          <CCardText>240 kW/mes</CCardText>
-                        </CCardBody>
-                      </CCol>
-                    </CRow>
-                  </CCard>
-
-                  <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                    <CRow className="g-0">
-                      <CCol md={4}>
-                        <CCardImage src={money} />
-                      </CCol>
-                      <CCol md={8}>
-                        <CCardBody>
-                          <CCardText>35000 pesos</CCardText>
-                        </CCardBody>
-                      </CCol>
-                    </CRow>
-                  </CCard>
-                </CCardBody>
-              </CCol>
-            </CRow>
-          </CCard>
-        </CCol>
-
-        <CCard className="mb-3" style={{ maxWidth: '640px' }}>
-          <CRow className="g-0">
-            <CCol md={4}>
-              <CCardImage src={fridge} />
-            </CCol>
-            <CCol md={8}>
-              <CCardBody>
-                <CCardTitle> Nevera</CCardTitle>
-
-                <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                  <CRow className="g-0">
-                    <CCol md={4}>
-                      <CCardImage src={lightning} />
-                    </CCol>
-                    <CCol md={8}>
-                      <CCardBody>
-                        <CCardText>240 kW/mes</CCardText>
-                      </CCardBody>
-                    </CCol>
-                  </CRow>
-                </CCard>
-
-                <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                  <CRow className="g-0">
-                    <CCol md={4}>
-                      <CCardImage src={money} />
-                    </CCol>
-                    <CCol md={8}>
-                      <CCardBody>
-                        <CCardText>35000 pesos</CCardText>
-                      </CCardBody>
-                    </CCol>
-                  </CRow>
-                </CCard>
-              </CCardBody>
-            </CCol>
-          </CRow>
-        </CCard>
-
-        <CCard className="mb-3" style={{ maxWidth: '640px' }}>
-          <CRow className="g-0">
-            <CCol md={4}>
-              <CCardImage src={microwave} />
-            </CCol>
-            <CCol md={8}>
-              <CCardBody>
-                <CCardTitle>Microondas</CCardTitle>
-
-                <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                  <CRow className="g-0">
-                    <CCol md={4}>
-                      <CCardImage src={lightning} />
-                    </CCol>
-                    <CCol md={8}>
-                      <CCardBody>
-                        <CCardText>240 kW/mes</CCardText>
-                      </CCardBody>
-                    </CCol>
-                  </CRow>
-                </CCard>
-
-                <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                  <CRow className="g-0">
-                    <CCol md={4}>
-                      <CCardImage src={money} />
-                    </CCol>
-                    <CCol md={8}>
-                      <CCardBody>
-                        <CCardText>35000 pesos</CCardText>
-                      </CCardBody>
-                    </CCol>
-                  </CRow>
-                </CCard>
-              </CCardBody>
-            </CCol>
-          </CRow>
-        </CCard>
-
-        {/**********************************************grupo 3**********************************/}
-
-        <CCardGroup>
-          <CCard style={{ maxWidth: '300px' }}>
-            <CCardImage orientation="top" src={fridge} />
-
-            <CCardBody>
-              <CCardTitle>Nevera</CCardTitle>
-
-              <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                <CRow className="g-0">
-                  <CCol md={4}>
-                    <CCardImage src={lightning} />
-                  </CCol>
-                  <CCol md={8}>
-                    <CCardBody>
-                      <CCardText>240 kW/mes</CCardText>
-                    </CCardBody>
-                  </CCol>
-                </CRow>
-              </CCard>
-
-              <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                <CRow className="g-0">
-                  <CCol md={4}>
-                    <CCardImage src={money} />
-                  </CCol>
-                  <CCol md={8}>
-                    <CCardBody>
-                      <CCardText>35000 pesos</CCardText>
-                    </CCardBody>
-                  </CCol>
-                </CRow>
-              </CCard>
-            </CCardBody>
-          </CCard>
-
-          <CCard style={{ maxWidth: '300px' }}>
-            <CCardImage orientation="top" src={microwave} />
-
-            <CCardBody>
-              <CCardTitle>Microondas</CCardTitle>
-
-              <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                <CRow className="g-0">
-                  <CCol md={4}>
-                    <CCardImage src={lightning} />
-                  </CCol>
-                  <CCol md={8}>
-                    <CCardBody>
-                      <CCardText>240 kW/mes</CCardText>
-                    </CCardBody>
-                  </CCol>
-                </CRow>
-              </CCard>
-
-              <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                <CRow className="g-0">
-                  <CCol md={4}>
-                    <CCardImage src={money} />
-                  </CCol>
-                  <CCol md={8}>
-                    <CCardBody>
-                      <CCardText>35000 pesos</CCardText>
-                    </CCardBody>
-                  </CCol>
-                </CRow>
-              </CCard>
-            </CCardBody>
-          </CCard>
-
-          <CCard style={{ maxWidth: '300px' }}>
-            <CCardImage orientation="top" src={washMachine} />
-
-            <CCardBody>
-              <CCardTitle>Lavadora</CCardTitle>
-
-              <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                <CRow className="g-0">
-                  <CCol md={4}>
-                    <CCardImage src={lightning} />
-                  </CCol>
-                  <CCol md={8}>
-                    <CCardBody>
-                      <CCardText>240 kW/mes</CCardText>
-                    </CCardBody>
-                  </CCol>
-                </CRow>
-              </CCard>
-
-              <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
-                <CRow className="g-0">
-                  <CCol md={4}>
-                    <CCardImage src={money} />
-                  </CCol>
-                  <CCol md={8}>
-                    <CCardBody>
-                      <CCardText>35000 pesos</CCardText>
-                    </CCardBody>
-                  </CCol>
-                </CRow>
-              </CCard>
-            </CCardBody>
-          </CCard>
-        </CCardGroup>
       </CRow>
     </>
   )

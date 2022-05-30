@@ -1,6 +1,14 @@
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
-import { CChartBar, CChartDoughnut, CChartLine, CChartPie } from '@coreui/react-chartjs'
+import { CChartBar, CChartPie } from '@coreui/react-chartjs'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import * as echarts from 'echarts'
+
+import TextField from '@mui/material/TextField'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+//import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
@@ -8,6 +16,15 @@ console.log(API) // print server address
 const Months = () => {
   const [dataPies1, setDataPies1] = useState([])
   const [dataPies2, setDataPies2] = useState([])
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(null)
+  const onChange = (dates) => {
+    const [start, end] = dates
+    setStartDate(start)
+    setEndDate(end)
+  }
+
+  const [value, setValue] = React.useState(null)
 
   const months = [
     'Jan',
@@ -160,27 +177,86 @@ const Months = () => {
   //**************************************** page ****************************************/
   return (
     <>
-      <h1>Comparación del consumo en los últimos meses</h1>
       <CRow>
-        <CCol xs={6}>
-          {dataPies1.map((pie) => (
-            <CCard className="mb-4" key={pie.month}>
-              <CCardHeader>{pie.month}</CCardHeader>
-              <CCardBody>
-                <CChartPie data={pie.chart} />
-              </CCardBody>
-            </CCard>
-          ))}
+        <CCol>
+          <CCard className="mb-4">
+            <CCardHeader>Histórico de datos</CCardHeader>
+
+            <CCardBody>
+              <CRow>
+                <CCol xs={12} sm={3} md={4}>
+                  <p>Selecciona un rango de fechas</p>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={onChange}
+                    startDate={startDate}
+                    endDate={endDate}
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
+                    selectsRange
+                    inline
+                  />
+                </CCol>
+                <CCol xs={12} sm={9} md={8}>
+                  <CChartBar
+                    data={{
+                      clip: { left: 5, top: false, right: -2, bottom: 0 },
+                      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                      datasets: [
+                        {
+                          barPercentage: 0.8,
+                          label: 'GitHub Commits',
+                          backgroundColor: '#f87979',
+                          data: [40, 20, 12, 39, 10, 40],
+                        },
+                      ],
+                    }}
+                  />
+                </CCol>
+              </CRow>
+            </CCardBody>
+          </CCard>
         </CCol>
-        <CCol xs={6}>
-          {dataPies2.map((pie) => (
-            <CCard className="mb-4" key={pie.month}>
-              <CCardHeader>{pie.month}</CCardHeader>
-              <CCardBody>
-                <CChartPie data={pie.chart} />
-              </CCardBody>
-            </CCard>
-          ))}
+      </CRow>
+
+      <CRow>
+        <CCol>
+          <CCard className="mb-4">
+            <CCardHeader>Consumo por mes</CCardHeader>
+            <CCardBody>
+              <CRow>
+                <CCol xs={12} sm={6} md={6}>
+                  <CChartPie
+                    data={{
+                      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                      datasets: [
+                        {
+                          barPercentage: 0.7,
+                          backgroundColor: '#f87979',
+                          data: [40, 20, 12, 39, 10, 40],
+                          radius: '85%',
+                        },
+                      ],
+                    }}
+                  />
+                </CCol>
+                <CCol xs={12} sm={2} md={2}></CCol>
+
+                <CCol xs={12} sm={4} md={4}>
+                  <p className="">Selecciona un mes</p>
+
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
+                    showFullMonthYearPicker
+                    inline
+                  />
+                </CCol>
+              </CRow>
+            </CCardBody>
+          </CCard>
         </CCol>
       </CRow>
     </>
