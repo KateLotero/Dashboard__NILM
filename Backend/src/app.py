@@ -35,7 +35,7 @@ Database = client.get_database('prueba')
 db = Database.house_2
   
 
-#-------------Routes-------------
+#-------------Routes--------------
 
 # get data of date range
 @app.route('/pastMonth2/<initDay>/<endDay>', methods = ['GET']) 
