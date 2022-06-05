@@ -173,45 +173,8 @@ const Statis = () => {
   //**************************************** page ****************************************/
   return (
     <>
-      <h1>Estadísticas</h1>
-      <CRow>
-        <CCol xs={6}>diagrama de barras con el consumo total de cada mes</CCol>
-        <CCol xs={6}>
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <strong>Costo del consumo por cada electrodoméstico</strong>{' '}
-              </CCardHeader>
-              <CCardBody>
-                <p className="text-medium-emphasis small"></p>
-
-                <CTable hover>
-                  <CTableHead>
-                    <CTableRow>
-                      <CTableHeaderCell scope="col">Dispositivo</CTableHeaderCell>
-
-                      {dataPies1.map((x) => (
-                        <CTableHeaderCell scope="col" key={x.month}>
-                          {x.month}
-                        </CTableHeaderCell>
-                      ))}
-                    </CTableRow>
-                  </CTableHead>
-
-                  <CTableBody>
-                    <CTableRow>
-                      {dataPies1.map((x) => (
-                        <CTableHeaderCell scope="row">{x.chart.labels[x]}</CTableHeaderCell>
-                      ))}
-                      <CTableDataCell></CTableDataCell>
-                    </CTableRow>
-                  </CTableBody>
-                </CTable>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CCol>
-      </CRow>
+      <h1>Sobre nosotros</h1>
+      <CRow></CRow>
     </>
   )
 }

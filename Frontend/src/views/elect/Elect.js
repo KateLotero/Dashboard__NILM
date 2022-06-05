@@ -10,9 +10,10 @@ import {
   CRow,
 } from '@coreui/react'
 
-import fridge from './../../assets/images/fridge2.jpg' // ./ me sirve para ubicarme en el directorio de este archivo
-import microwave from './../../assets/images/microwave.JPG' // ../ me devuelvo un directorio
-import washMachine from './../../assets/images/washMachine.jpg'
+import fridge from './../../assets/images/Nevera.jpg' // ./ me sirve para ubicarme en el directorio de este archivo
+import microwave from './../../assets/images/Microondas.jpg' // ../ me devuelvo un directorio
+import washMachine from './../../assets/images/Lavadora.jpg'
+import Otros from './../../assets/images/otros.jpg'
 import lightning from './../../assets/images/lightning.png'
 import money from './../../assets/images/dinero3.png'
 
@@ -20,8 +21,9 @@ const API = process.env.REACT_APP_API //Call the environment var to connect with
 console.log(API) // print server address
 
 const Elect = () => {
-  const [dataPies1, setDataPies1] = useState([])
-  const [dataPies2, setDataPies2] = useState([])
+  /*************************************** constants *************************************/
+
+  const [dataCards, setDataCards] = useState([])
 
   const months = [
     'Jan',
@@ -37,53 +39,52 @@ const Elect = () => {
     'Nov',
     'Dec',
   ]
+  console.time('loop')
+
+  // calculate the past month
+  const date = new Date()
+  let pastMonth = date.getMonth().length == 2 ? date.getMonth() : `0${date.getMonth()}`
+  let actualMonth =
+    (date.getMonth() + 1).length == 2 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`
+  pastMonth = pastMonth == '00' ? '12' : pastMonth
+  let date1 = `${date.getFullYear()}-${pastMonth}-01`
+  let date2 = `${date.getFullYear()}-${actualMonth}-01`
+  date1 = '2022-01-01'
+  date2 = '2022-02-01'
 
   //*************************************** requests to the server *************************************/
 
-  const getAppliances = () =>
-    fetch(`${API}/allData`) // GET is the default method
-      .then((res) => res.json()) // res is an object, al convertirlo en json estoy haciendo otra promesa
-  //.then(data=> setPowerAppliances(data))//por eso uso este otro then
-  //console.log(`${API}/${appliance}`)
+  const getPastMonth = () =>
+    fetch(`${API}/lastMonth/${date1}/${date2}`)
+      .then((res) => res.json())
+      .catch((error) => console.error('Error:', error))
 
   useEffect(async () => {
-    const fetchedAppliances = await getAppliances()
-    const dataElects = calcPowerDay(fetchedAppliances)
-    //console.log('Datos Electrodomésticos procesados', dataElects)
-    const { appliancesMonth, powerMonth } = calcPowerMonth(dataElects)
-    console.log('Potencia de los dispos por mes', appliancesMonth)
-    //console.log({ fetchedAppliances, dataElects, devices })
+    const fetchedAppliances = await getPastMonth()
+    console.log('respuestaaaa', fetchedAppliances)
 
-    let month = ''
-    let devices = []
+    let device = ''
+    let power = 0
+    let days = 0
+    let price = 0
+    let price_kWh = 0
     let data = []
-    let datapie1 = []
-    let datapie2 = []
-    let chart = {}
 
-    for (let i = 0; i < powerMonth.length; i++) {
-      month = powerMonth[i].month
-      devices = powerMonth[i].devices
-      data = powerMonth[i].power
+    for (let i = 0; i < fetchedAppliances.length; i++) {
+      device = fetchedAppliances[i]._id.deviceId
+      power = fetchedAppliances[i].average
+      power = power.toFixed(2)
+      days = fetchedAppliances[i].countSamples / 96
+      price_kWh = 500
+      price = Math.round((power * 24 * days * price_kWh) / 1000)
 
-      chart = {
-        labels: devices,
-        datasets: [
-          {
-            data: data,
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          },
-        ],
-      }
-      i % 2 == 0
-        ? datapie1.push({ month: month, chart: chart })
-        : datapie2.push({ month: month, chart: chart })
+      data.push({ device, power, price })
     }
-
-    setDataPies1(datapie1)
-    setDataPies2(datapie2)
+    console.timeEnd('loop')
+    setDataCards(data)
   }, [])
+
+  console.log('cardsss', dataCards)
 
   //*************************************** Data process **************************************************
 
@@ -179,24 +180,24 @@ const Elect = () => {
           <CCard xs={12} sm={12} md={12}>
             <CCardHeader>Consumo de energía en el mes anterior</CCardHeader>
             <CRow>
-              <CCol xs={12} sm={4} md={4}>
-                <CCard className="border border-3">
+              <CCol xs={12} sm={6} md={3}>
+                <CCard className="border border-1">
                   <CCardImage orientation="top" src={fridge} style={{ maxBlockSize: '20rem' }} />
                   <CCardBody>
                     <CCardTitle>Nevera</CCardTitle>
-                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
                       <CRow className="g-0">
                         <CCol md={4} sm={4} xs={4}>
                           <CCardImage src={lightning} />
                         </CCol>
                         <CCol md={8} sm={8} xs={8}>
                           <CCardBody>
-                            <CCardText>240 kW/mes</CCardText>
+                            <CCardText>240.6 kW/mes</CCardText>
                           </CCardBody>
                         </CCol>
                       </CRow>
                     </CCard>
-                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
                       <CRow className="g-0">
                         <CCol md={4} sm={4} xs={4}>
                           <CCardImage src={money} />
@@ -211,24 +212,24 @@ const Elect = () => {
                   </CCardBody>
                 </CCard>
               </CCol>
-              <CCol xs={12} sm={4} md={4}>
-                <CCard className="border border-3">
+              <CCol xs={12} sm={6} md={3}>
+                <CCard className="border border-1">
                   <CCardImage orientation="top" src={microwave} style={{ maxBlockSize: '20rem' }} />
                   <CCardBody>
                     <CCardTitle>Microondas</CCardTitle>
-                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
                       <CRow className="g-0">
                         <CCol md={4} sm={4} xs={4}>
                           <CCardImage src={lightning} />
                         </CCol>
                         <CCol md={8} sm={8} xs={8}>
                           <CCardBody>
-                            <CCardText>240 kW/mes</CCardText>
+                            <CCardText>240.6 kW/mes</CCardText>
                           </CCardBody>
                         </CCol>
                       </CRow>
                     </CCard>
-                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
                       <CRow className="g-0">
                         <CCol md={4} sm={4} xs={4}>
                           <CCardImage src={money} />
@@ -243,8 +244,8 @@ const Elect = () => {
                   </CCardBody>
                 </CCard>
               </CCol>
-              <CCol xs={12} sm={4} md={4}>
-                <CCard className="border border-3">
+              <CCol xs={12} sm={6} md={3}>
+                <CCard className="border border-1">
                   <CCardImage
                     orientation="top"
                     src={washMachine}
@@ -252,19 +253,19 @@ const Elect = () => {
                   />
                   <CCardBody>
                     <CCardTitle>Lavadora</CCardTitle>
-                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
                       <CRow className="g-0">
                         <CCol md={4} sm={4} xs={4}>
                           <CCardImage src={lightning} />
                         </CCol>
                         <CCol md={8} sm={8} xs={8}>
                           <CCardBody>
-                            <CCardText>240 kW/mes</CCardText>
+                            <CCardText>240.6 kW/mes</CCardText>
                           </CCardBody>
                         </CCol>
                       </CRow>
                     </CCard>
-                    <CCard className="mb-3" class="border-0" style={{ maxWidth: '200px' }}>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
                       <CRow className="g-0">
                         <CCol md={4} sm={4} xs={4}>
                           <CCardImage src={money} />
@@ -279,6 +280,74 @@ const Elect = () => {
                   </CCardBody>
                 </CCard>
               </CCol>
+              <CCol xs={12} sm={6} md={3}>
+                <CCard className="border border-1">
+                  <CCardImage orientation="top" src={Otros} style={{ maxBlockSize: '20rem' }} />
+                  <CCardBody>
+                    <CCardTitle>Otros</CCardTitle>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={lightning} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>240.6 kW/mes</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
+                      <CRow className="g-0">
+                        <CCol md={4} sm={4} xs={4}>
+                          <CCardImage src={money} />
+                        </CCol>
+                        <CCol md={8} sm={8} xs={8}>
+                          <CCardBody>
+                            <CCardText>35000 pesos</CCardText>
+                          </CCardBody>
+                        </CCol>
+                      </CRow>
+                    </CCard>
+                  </CCardBody>
+                </CCard>
+              </CCol>
+            </CRow>
+            <CRow>
+              {dataCards.map((card) => (
+                <CCol xs={12} sm={6} md={3}>
+                  <CCard className="border border-1">
+                    <CCardImage orientation="top" src={fridge} style={{ maxBlockSize: '20rem' }} />
+                    <CCardBody>
+                      <CCardTitle>{card.device}</CCardTitle>
+                      <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
+                        <CRow className="g-0">
+                          <CCol md={4} sm={4} xs={4}>
+                            <CCardImage src={lightning} />
+                          </CCol>
+                          <CCol md={8} sm={8} xs={8}>
+                            <CCardBody>
+                              <CCardText>{card.power} kW/mes</CCardText>
+                            </CCardBody>
+                          </CCol>
+                        </CRow>
+                      </CCard>
+                      <CCard className="mb-3 border-0" style={{ maxWidth: '220px' }}>
+                        <CRow className="g-0">
+                          <CCol md={4} sm={4} xs={4}>
+                            <CCardImage src={money} />
+                          </CCol>
+                          <CCol md={8} sm={8} xs={8}>
+                            <CCardBody>
+                              <CCardText>{card.price} pesos</CCardText>
+                            </CCardBody>
+                          </CCol>
+                        </CRow>
+                      </CCard>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              ))}
             </CRow>
           </CCard>
         </CCol>

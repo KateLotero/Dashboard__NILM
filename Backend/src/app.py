@@ -38,7 +38,7 @@ db = Database.house_2
 #-------------Routes--------------
 
 # get data of date range
-@app.route('/pastMonth2/<initDay>/<endDay>', methods = ['GET']) 
+@app.route('/lastMonth/<initDay>/<endDay>', methods = ['GET']) 
 def getbyDate3(initDay,endDay):
     inicio = time.time()
     startDay = datetime.datetime.fromisoformat(initDay)
@@ -69,6 +69,7 @@ def getbyDate3(initDay,endDay):
                "month":{"$month": "$d"},            
             },    
         "average" : {"$avg": "$samples.power"},
+        "count": {"$sum":1},
         },     
 
     },
@@ -81,8 +82,8 @@ def getbyDate3(initDay,endDay):
     ]):data.append({
             '_id': doc['_id'],
             'average': doc['average'],
-            #'deviceId': doc['deviceId'],
-            #'samples': doc['samples'],
+            'countSamples': doc['count'],
+            
         })
     #print(data)
     fin = time.time()
@@ -175,4 +176,3 @@ def getbyDate2(initDay,endDay):
 if __name__== "__main__":
     app.run(debug=True)
 
-    

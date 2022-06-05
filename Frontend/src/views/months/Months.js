@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { CChartBar, CChartPie } from '@coreui/react-chartjs'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import * as echarts from 'echarts'
+import es from 'date-fns/locale/es'
+registerLocale('es', es)
 
 import TextField from '@mui/material/TextField'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { registerLocale } from 'react-datepicker'
 //import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
@@ -184,7 +186,7 @@ const Months = () => {
 
             <CCardBody>
               <CRow>
-                <CCol xs={12} sm={3} md={4}>
+                <CCol xs={12} sm={12} md={4}>
                   <p>Selecciona un rango de fechas</p>
                   <DatePicker
                     selected={startDate}
@@ -192,12 +194,13 @@ const Months = () => {
                     startDate={startDate}
                     endDate={endDate}
                     dateFormat="MM/yyyy"
+                    locale="es"
                     showMonthYearPicker
                     selectsRange
                     inline
                   />
                 </CCol>
-                <CCol xs={12} sm={9} md={8}>
+                <CCol xs={12} sm={12} md={8}>
                   <CChartBar
                     data={{
                       clip: { left: 5, top: false, right: -2, bottom: 0 },
@@ -228,12 +231,12 @@ const Months = () => {
                 <CCol xs={12} sm={6} md={6}>
                   <CChartPie
                     data={{
-                      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                      labels: ['Nevera', 'Microondas', 'Lavadora', 'otros'],
                       datasets: [
                         {
                           barPercentage: 0.7,
                           backgroundColor: '#f87979',
-                          data: [40, 20, 12, 39, 10, 40],
+                          data: [50, 15, 30, 5],
                           radius: '85%',
                         },
                       ],
@@ -249,8 +252,8 @@ const Months = () => {
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     dateFormat="MM/yyyy"
+                    locale="es"
                     showMonthYearPicker
-                    showFullMonthYearPicker
                     inline
                   />
                 </CCol>
