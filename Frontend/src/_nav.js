@@ -13,6 +13,7 @@ import {
   cilHouse,
   cilNotes,
   cilPencil,
+  cilPeople,
   cilPhone,
   cilPuzzle,
   cilSpeedometer,
@@ -23,18 +24,7 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 const _nav = [
   {
     component: CNavItem,
-    name: 'Dashboard',
-    to: '/dashboard',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
-  },
-
-  {
-    component: CNavItem,
-    name: 'Electrodomésticos',
+    name: 'Mes anterior',
     to: '/elect',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
@@ -48,14 +38,25 @@ const _nav = [
 
   {
     component: CNavItem,
-    name: 'Estadísticas',
+    name: 'Sobre nosotros',
     to: '/statis',
-    icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
 
   {
     component: CNavTitle,
     name: 'Theme',
+  },
+
+  {
+    component: CNavItem,
+    name: 'Dashboard',
+    to: '/dashboard',
+    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      text: 'NEW',
+    },
   },
   {
     component: CNavItem,

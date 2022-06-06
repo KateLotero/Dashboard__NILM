@@ -38,7 +38,7 @@ db = Database.house_2
 #-------------Routes--------------
 
 # get data of date range
-@app.route('/lastMonth/<initDay>/<endDay>', methods = ['GET']) 
+@app.route('/dateRange/<initDay>/<endDay>', methods = ['GET']) 
 def getbyDate3(initDay,endDay):
     inicio = time.time()
     startDay = datetime.datetime.fromisoformat(initDay)

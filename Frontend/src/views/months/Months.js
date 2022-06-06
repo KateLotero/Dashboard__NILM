@@ -1,180 +1,159 @@
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { CChartBar, CChartPie } from '@coreui/react-chartjs'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { addDays } from 'date-fns'
 import es from 'date-fns/locale/es'
 registerLocale('es', es)
-
-import TextField from '@mui/material/TextField'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { registerLocale } from 'react-datepicker'
-//import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
 
 const Months = () => {
-  const [dataPies1, setDataPies1] = useState([])
-  const [dataPies2, setDataPies2] = useState([])
+  const [infoPie, setInfoPie] = useState({})
+  const [infoBar, setInfoBar] = useState({})
+  const [datePie, setDatePie] = useState(new Date())
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(null)
-  const onChange = (dates) => {
-    const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
-  }
-
-  const [value, setValue] = React.useState(null)
 
   const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
   ]
 
   //*************************************** requests to the server *************************************/
-
-  const getAppliances = () =>
-    fetch(`${API}/allData`) // GET is the default method
-      .then((res) => res.json()) // res is an object, al convertirlo en json estoy haciendo otra promesa
-  //.then(data=> setPowerAppliances(data))//por eso uso este otro then
-  //console.log(`${API}/${appliance}`)
-
-  useEffect(async () => {
-    const fetchedAppliances = await getAppliances()
-    const dataElects = calcPowerDay(fetchedAppliances)
-    //console.log('Datos Electrodomésticos procesados', dataElects)
-    const { appliancesMonth, powerMonth } = calcPowerMonth(dataElects)
-    console.log('Potencia de los dispos por mes', appliancesMonth)
-    //console.log({ fetchedAppliances, dataElects, devices })
-
-    let month = ''
-    let devices = []
-    let data = []
-    let datapie1 = []
-    let datapie2 = []
-    let chart = {}
-
-    for (let i = 0; i < powerMonth.length; i++) {
-      month = powerMonth[i].month
-      devices = powerMonth[i].devices
-      data = powerMonth[i].power
-
-      chart = {
-        labels: devices,
-        datasets: [
-          {
-            data: data,
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          },
-        ],
-      }
-      i % 2 == 0
-        ? datapie1.push({ month: month, chart: chart })
-        : datapie2.push({ month: month, chart: chart })
-    }
-
-    setDataPies1(datapie1)
-    setDataPies2(datapie2)
-  }, [])
+  const getPastMonth = (date1, date2) =>
+    fetch(`${API}/dateRange/${date1}/${date2}`)
+      .then((res) => res.json())
+      .catch((error) => console.error('Error:', error))
 
   //*************************************** Data process **************************************************
 
-  // Calculate average power consumption each day
-  function calcPowerDay(data) {
-    //Receive the data extracted of the data base
-    const dataDB = data
-    //console.log('dataDB', dataDB)
+  async function calcRange(start, end) {
+    let month1 =
+      (start.getMonth() + 1).toString().length == 2
+        ? `${start.getMonth() + 1}`
+        : `0${start.getMonth() + 1}`
 
-    const dataElects = dataDB.map(function (x) {
-      let newArray = {
-        deviceId: x.deviceId,
-        d: x.d,
-        samples: x.samples,
+    let month2 =
+      (end.getMonth() + 2).toString().length == 2
+        ? `${end.getMonth() + 2}`
+        : `0${end.getMonth() + 2}`
+    month2 = month2 == '13' ? '01' : month2
+
+    let date1 = `${start.getFullYear()}-${month1}-01`
+    let date2 = `${end.getFullYear()}-${month2}-01`
+    const fetchedAppliances = await getPastMonth(date1, date2)
+    console.log('respuestaaaa', fetchedAppliances)
+
+    let month = []
+    let month_ = []
+    let data = []
+
+    for (let i = 0; i < fetchedAppliances.length; i++) {
+      if (fetchedAppliances[i]._id.deviceId == 'Total') {
+        month[i] = fetchedAppliances[i]._id.month
+        data[i] = fetchedAppliances[i].average
       }
-      return newArray
-    })
-    //console.log('deviceId, d, samples', dataElects)
-
-    const samplesElect = dataElects.map((x) => [x.samples])
-    for (let i = 0; i < samplesElect.length; i++) {
-      let sample = samplesElect[i][0]
-      //console.log('muestras', sample)
-
-      let powerElect = sample.map((x) => x.power)
-      //console.log('potencia', powerElect)
-
-      let average = powerElect.reduce((total, value) => total + value) / 96 //Preguntar a Pablo si siempre serán 96
-      //console.log(average)
-
-      dataElects[i]['power'] = average
     }
-    return dataElects
+
+    month = month.flat()
+    data = data.flat()
+
+    for (let i = 0; i < month.length; i++) {
+      month_[i] = months[month[i] - 1]
+    }
+
+    let chart = {
+      labels: month_,
+      datasets: [
+        {
+          barPercentage: 0.8,
+          label: 'Potencia consumida por mes (kW/m??? imprimí directo)',
+          backgroundColor: '#f87979',
+          data: data,
+          animation: false,
+        },
+      ],
+    }
+
+    console.log('chartt', chart)
+
+    return chart
   }
 
-  // Calculate average power consumption per month
-  function calcPowerMonth(dataElects) {
-    //capture the devices available
-    let devices = dataElects.map((x) => x.deviceId)
-    devices = [...new Set(devices)]
-    //setDataDevices(devices)
-    console.log('devices', devices)
+  useEffect(async () => {
+    let start = new Date()
+    let end = new Date()
+    let chart = await calcRange(start, end)
+    setInfoBar(chart)
+  }, [])
 
-    let appliancesMonth = []
-    devices.map((appliance) => {
-      //filter by appliance
-      const dataDevice = dataElects.filter((x) => x.deviceId == appliance)
-      //console.log(`datos ${appliance}`, dataDevice)
+  const onChangeBar = async (dates) => {
+    const [start, end] = dates
+    setStartDate(start)
+    setEndDate(end)
 
-      //filter by month
-      for (let k = 0; k < months.length; k++) {
-        const filterMonth = dataDevice.filter((x) => x.d.includes(months[k]))
-        //console.log('filtro por mes', filterMonth)
-
-        let powerElect = filterMonth.map((x) => x.power)
-        //console.log('potencia', powerElect)
-
-        let average = powerElect.reduce((total, value) => total + value, 0) / filterMonth.length
-        //console.log('pr', average)
-
-        average
-          ? appliancesMonth.push({ deviceId: appliance, month: months[k], power: average })
-          : 0
-        // if average is different to NaN ? haga esto : si no esto
-      }
-    })
-
-    let month = appliancesMonth.map((x) => x.month)
-    month = [...new Set(month)]
-    //console.log('Meses', month)
-
-    let powerMonth = []
-    month.map((month) => {
-      //filter by month
-      const dataMonth = appliancesMonth.filter((x) => x.month == month)
-      //console.log(`datos ${month}`, dataMonth)
-
-      let appliances = dataMonth.map((x) => x.deviceId)
-      let power = dataMonth.map((x) => x.power)
-      //console.log('potencia', power)
-
-      powerMonth.push({ month: month, devices: appliances, power: power })
-    })
-
-    return { appliancesMonth, powerMonth }
+    if (end) {
+      let chart = await calcRange(start, end)
+      setInfoBar(chart)
+    }
   }
+
+  useEffect(async () => {
+    let month1 =
+      (datePie.getMonth() + 1).toString().length == 2
+        ? `${datePie.getMonth() + 1}`
+        : `0${datePie.getMonth() + 1}`
+
+    let month2 =
+      (datePie.getMonth() + 2).toString().length == 2
+        ? `${datePie.getMonth() + 2}`
+        : `0${datePie.getMonth() + 2}`
+    month2 = month2 == '13' ? '01' : month2 //verificar el año
+
+    console.log('mes1', month1, 'finalmes', month2)
+
+    let date1 = `${datePie.getFullYear()}-${month1}-01`
+    let date2 = `${datePie.getFullYear()}-${month2}-01`
+    const fetchedAppliances = await getPastMonth(date1, date2)
+    console.log('respuestaaaa', fetchedAppliances)
+
+    let devices = []
+    let data = []
+
+    for (let i = 0; i < fetchedAppliances.length; i++) {
+      devices[i] = fetchedAppliances[i]._id.deviceId
+      data[i] = fetchedAppliances[i].average
+    }
+
+    let chart = {
+      labels: devices,
+      datasets: [
+        {
+          data: data,
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          animation: false,
+          radius: '85%',
+        },
+      ],
+    }
+    console.log('devices', devices, 'data', data)
+    setInfoPie(chart)
+  }, [datePie])
 
   //**************************************** page ****************************************/
   return (
@@ -190,9 +169,10 @@ const Months = () => {
                   <p>Selecciona un rango de fechas</p>
                   <DatePicker
                     selected={startDate}
-                    onChange={onChange}
                     startDate={startDate}
                     endDate={endDate}
+                    onChange={onChangeBar}
+                    maxDate={addDays(new Date(), -1)}
                     dateFormat="MM/yyyy"
                     locale="es"
                     showMonthYearPicker
@@ -201,20 +181,7 @@ const Months = () => {
                   />
                 </CCol>
                 <CCol xs={12} sm={12} md={8}>
-                  <CChartBar
-                    data={{
-                      clip: { left: 5, top: false, right: -2, bottom: 0 },
-                      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-                      datasets: [
-                        {
-                          barPercentage: 0.8,
-                          label: 'GitHub Commits',
-                          backgroundColor: '#f87979',
-                          data: [40, 20, 12, 39, 10, 40],
-                        },
-                      ],
-                    }}
-                  />
+                  <CChartBar data={infoBar} />
                 </CCol>
               </CRow>
             </CCardBody>
@@ -229,19 +196,7 @@ const Months = () => {
             <CCardBody>
               <CRow>
                 <CCol xs={12} sm={6} md={6}>
-                  <CChartPie
-                    data={{
-                      labels: ['Nevera', 'Microondas', 'Lavadora', 'otros'],
-                      datasets: [
-                        {
-                          barPercentage: 0.7,
-                          backgroundColor: '#f87979',
-                          data: [50, 15, 30, 5],
-                          radius: '85%',
-                        },
-                      ],
-                    }}
-                  />
+                  <CChartPie data={infoPie} />
                 </CCol>
                 <CCol xs={12} sm={2} md={2}></CCol>
 
@@ -249,8 +204,9 @@ const Months = () => {
                   <p className="">Selecciona un mes</p>
 
                   <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    selected={datePie}
+                    onChange={(datePie) => setDatePie(datePie)}
+                    maxDate={addDays(new Date(), -1)}
                     dateFormat="MM/yyyy"
                     locale="es"
                     showMonthYearPicker
