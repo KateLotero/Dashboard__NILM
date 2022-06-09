@@ -15,8 +15,8 @@ const Months = () => {
   const [infoPie, setInfoPie] = useState({})
   const [infoBar, setInfoBar] = useState({})
   const [datePie, setDatePie] = useState(new Date())
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(null)
+  const [startDate, setStartDate] = useState(new Date('2022-02-01'))
+  const [endDate, setEndDate] = useState(new Date())
 
   const months = [
     'Enero',
@@ -61,11 +61,15 @@ const Months = () => {
     let month = []
     let month_ = []
     let data = []
+    let power = 0
+    let days = 0
 
     for (let i = 0; i < fetchedAppliances.length; i++) {
       if (fetchedAppliances[i]._id.deviceId == 'Total') {
         month[i] = fetchedAppliances[i]._id.month
-        data[i] = fetchedAppliances[i].average
+        power = fetchedAppliances[i].average // Potencia (W)
+        days = fetchedAppliances[i].countSamples / 96
+        data[i] = ((power * 24 * days) / 1000).toFixed(1) //Energía (kWh)
       }
     }
 
@@ -81,7 +85,7 @@ const Months = () => {
       datasets: [
         {
           barPercentage: 0.8,
-          label: 'Potencia consumida por mes (kW/m??? imprimí directo)',
+          label: 'Energía consumida por mes (kWh)',
           backgroundColor: '#f87979',
           data: data,
           animation: false,
@@ -95,7 +99,7 @@ const Months = () => {
   }
 
   useEffect(async () => {
-    let start = new Date()
+    let start = new Date('2022-01-01')
     let end = new Date()
     let chart = await calcRange(start, end)
     setInfoBar(chart)
@@ -133,11 +137,20 @@ const Months = () => {
 
     let devices = []
     let data = []
+    let power = 0
+    let days = 0
 
     for (let i = 0; i < fetchedAppliances.length; i++) {
-      devices[i] = fetchedAppliances[i]._id.deviceId
-      data[i] = fetchedAppliances[i].average
+      if (fetchedAppliances[i]._id.deviceId != 'Total') {
+        devices[i] = fetchedAppliances[i]._id.deviceId
+        power = fetchedAppliances[i].average // Potencia (W)
+        days = fetchedAppliances[i].countSamples / 96
+        data[i] = ((power * 24 * days) / 1000).toFixed(1) //Energía (kWh)
+      }
     }
+
+    devices = devices.flat()
+    data = data.flat()
 
     let chart = {
       labels: devices,

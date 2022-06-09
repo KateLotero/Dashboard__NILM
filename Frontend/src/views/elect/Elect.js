@@ -67,15 +67,17 @@ const Elect = () => {
     let image = ''
 
     for (let i = 0; i < fetchedAppliances.length; i++) {
-      device = fetchedAppliances[i]._id.deviceId
-      power = fetchedAppliances[i].average // Watts
-      days = fetchedAppliances[i].countSamples / 96
-      power_kWh = ((power * 24 * days) / 1000).toFixed(1)
-      price_kWh = 500 // $/kWh
-      price = Math.round(power_kWh * price_kWh)
-      image = images[device]
+      if (fetchedAppliances[i]._id.deviceId != 'Total') {
+        device = fetchedAppliances[i]._id.deviceId
+        power = fetchedAppliances[i].average // Watts
+        days = fetchedAppliances[i].countSamples / 96
+        power_kWh = ((power * 24 * days) / 1000).toFixed(1)
+        price_kWh = 500 // $/kWh
+        price = Math.round(power_kWh * price_kWh)
+        image = images[device]
 
-      data.push({ device, power_kWh, price, image })
+        data.push({ device, power_kWh, price, image })
+      }
     }
     console.timeEnd('loop')
     setDataCards(data)
@@ -89,7 +91,12 @@ const Elect = () => {
       <CRow>
         <CCol>
           <CCard xs={12} sm={12} md={12}>
-            <CCardHeader>Consumo de energía en el mes anterior</CCardHeader>
+            <CCardHeader>
+              {' '}
+              <center>
+                <h5>Consumo de energía en el mes anterior</h5>
+              </center>
+            </CCardHeader>
             <CRow>
               {dataCards.map((card) => (
                 <CCol xs={12} sm={6} md={3} key={card.device}>
@@ -120,7 +127,9 @@ const Elect = () => {
                           </CCol>
                           <CCol md={8} sm={8} xs={8}>
                             <CCardBody>
-                              <CCardText>{card.price} pesos</CCardText>
+                              <CCardText>
+                                {new Intl.NumberFormat('es-ES').format(card.price)} pesos
+                              </CCardText>
                             </CCardBody>
                           </CCol>
                         </CRow>

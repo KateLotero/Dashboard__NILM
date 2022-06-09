@@ -26,14 +26,14 @@ const _nav = [
     component: CNavItem,
     name: 'Mes anterior',
     to: '/elect',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
   },
 
   {
     component: CNavItem,
     name: 'Histórico de datos',
     to: '/months',
-    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
   },
 
   {
@@ -42,12 +42,12 @@ const _nav = [
     to: '/statis',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
-
+  /* 
   {
     component: CNavTitle,
     name: 'Theme',
   },
-
+  
   {
     component: CNavItem,
     name: 'Dashboard',
@@ -294,7 +294,7 @@ const _nav = [
   {
     component: CNavTitle,
     name: 'Extras',
-  },
+  }, 
   {
     component: CNavGroup,
     name: 'Pages',
@@ -321,7 +321,7 @@ const _nav = [
         to: '/500',
       },
     ],
-  },
+  },*/
 ]
 
 export default _nav
