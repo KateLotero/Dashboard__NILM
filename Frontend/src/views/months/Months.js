@@ -1,4 +1,4 @@
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect } from '@coreui/react'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { CChartBar, CChartPie } from '@coreui/react-chartjs'
 import DatePicker from 'react-datepicker'
@@ -7,16 +7,21 @@ import { addDays } from 'date-fns'
 import es from 'date-fns/locale/es'
 registerLocale('es', es)
 import { registerLocale } from 'react-datepicker'
+import HeatMap from 'react-heatmap-grid'
+import { padding } from '@mui/system'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
 
 const Months = () => {
-  const [infoPie, setInfoPie] = useState({})
+  const [startDateBar, setstartDateBar] = useState(new Date(2022, 0, 1))
+  const [endDateBar, setEndDateBar] = useState(new Date())
   const [infoBar, setInfoBar] = useState({})
   const [datePie, setDatePie] = useState(new Date())
-  const [startDate, setStartDate] = useState(new Date('2022-02-01'))
-  const [endDate, setEndDate] = useState(new Date())
+  const [infoPie, setInfoPie] = useState({})
+  const [startDateMap, setstartDateMap] = useState(new Date(2022, 0, 1))
+  const [endDateMap, setendDateMap] = useState(new Date(2022, 0, 2))
+  const [infoMap, setInfoMap] = useState({})
 
   const months = [
     'Enero',
@@ -39,6 +44,11 @@ const Months = () => {
       .then((res) => res.json())
       .catch((error) => console.error('Error:', error))
 
+  const getHour = (date1, date2, device) =>
+    fetch(`${API}/weekRange/${date1}/${date2}/${device}`)
+      .then((res) => res.json())
+      .catch((error) => console.error('Error:', error))
+
   //*************************************** Data process **************************************************
 
   async function calcRange(start, end) {
@@ -56,7 +66,8 @@ const Months = () => {
     let date1 = `${start.getFullYear()}-${month1}-01`
     let date2 = `${end.getFullYear()}-${month2}-01`
     const fetchedAppliances = await getPastMonth(date1, date2)
-    console.log('respuestaaaa', fetchedAppliances)
+    console.log('fecha1', date1, 'fecha2', date2)
+    //console.log('respuestaaaa', fetchedAppliances)
 
     let month = []
     let month_ = []
@@ -93,13 +104,13 @@ const Months = () => {
       ],
     }
 
-    console.log('chartt', chart)
+    //console.log('chartt', chart)
 
     return chart
   }
 
   useEffect(async () => {
-    let start = new Date('2022-01-01')
+    let start = new Date(2022, 0, 1)
     let end = new Date()
     let chart = await calcRange(start, end)
     setInfoBar(chart)
@@ -107,8 +118,8 @@ const Months = () => {
 
   const onChangeBar = async (dates) => {
     const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
+    setstartDateBar(start)
+    setEndDateBar(end)
 
     if (end) {
       let chart = await calcRange(start, end)
@@ -128,12 +139,12 @@ const Months = () => {
         : `0${datePie.getMonth() + 2}`
     month2 = month2 == '13' ? '01' : month2 //verificar el año
 
-    console.log('mes1', month1, 'finalmes', month2)
+    //console.log('mes1', month1, 'finalmes', month2)
 
     let date1 = `${datePie.getFullYear()}-${month1}-01`
     let date2 = `${datePie.getFullYear()}-${month2}-01`
     const fetchedAppliances = await getPastMonth(date1, date2)
-    console.log('respuestaaaa', fetchedAppliances)
+    //console.log('respuestaaaa', fetchedAppliances)
 
     let devices = []
     let data = []
@@ -164,10 +175,27 @@ const Months = () => {
         },
       ],
     }
-    console.log('devices', devices, 'data', data)
+    //console.log('devices', devices, 'data', data)
     setInfoPie(chart)
   }, [datePie])
 
+  const onChangeMap = async (dates) => {
+    const [start, end] = dates
+    setstartDateMap(start)
+    setendDateMap(end)
+  }
+  const fechas = []
+  for (let i = 0; i < fechas.length; i++) {
+    const element = fechas[i]
+  }
+
+  const xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
+  //console.log(xLabels)
+  const xLabelsVisibility = new Array(24).fill(0).map((_, i) => true)
+  const yLabels = ['Ene 1', 'Mon', 'Tue', 'Wede', 'Thu', 'Fri', 'Sat', 'och', 'nue', 'diez']
+  const data = new Array(yLabels.length)
+    .fill(0)
+    .map(() => new Array(xLabels.length).fill(0).map(() => Math.floor(Math.random() * 100)))
   //**************************************** page ****************************************/
   return (
     <>
@@ -175,15 +203,14 @@ const Months = () => {
         <CCol>
           <CCard className="mb-4">
             <CCardHeader>Histórico de datos</CCardHeader>
-
             <CCardBody>
               <CRow>
                 <CCol xs={12} sm={12} md={4}>
                   <p>Selecciona un rango de fechas</p>
                   <DatePicker
-                    selected={startDate}
-                    startDate={startDate}
-                    endDate={endDate}
+                    selected={startDateBar}
+                    startDate={startDateBar}
+                    endDate={endDateBar}
                     onChange={onChangeBar}
                     maxDate={addDays(new Date(), -1)}
                     dateFormat="MM/yyyy"
@@ -215,7 +242,6 @@ const Months = () => {
 
                 <CCol xs={12} sm={4} md={4}>
                   <p className="">Selecciona un mes</p>
-
                   <DatePicker
                     selected={datePie}
                     onChange={(datePie) => setDatePie(datePie)}
@@ -224,6 +250,68 @@ const Months = () => {
                     locale="es"
                     showMonthYearPicker
                     inline
+                  />
+                </CCol>
+              </CRow>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
+      <CRow>
+        <CCol>
+          <CCard>
+            <CCardHeader>Consumo por hora</CCardHeader>
+            <CCardBody>
+              <CRow>
+                <CCol>
+                  <CFormSelect
+                    aria-label="Default select example"
+                    options={[
+                      { label: 'Lavadora', value: '3' },
+                      { label: 'Nevera', value: '1' },
+                      { label: 'Microondas', value: '2' },
+                      { label: 'Total', value: '4' },
+                    ]}
+                  />
+                </CCol>
+                <CCol>
+                  <DatePicker
+                    className="form-select"
+                    selected={startDateMap}
+                    startDate={startDateMap}
+                    endDate={endDateMap}
+                    onChange={onChangeMap}
+                    dateFormat="MMMM d, yyyy"
+                    //maxDate={[addDays(new Date(), -1), addDays(startDate, 7)]}
+                    //excludeDates={[addDays(startDate, 7)]}
+                    placeholderText="Selecciona un rango"
+                    //dateFormat="Pp"
+                    locale="es"
+                    selectsRange
+                    //shouldCloseOnSelect={false}
+                  />
+                </CCol>
+              </CRow>
+              <CRow className="card-body" style={{ fontSize: '8px' }}>
+                <CCol>
+                  <HeatMap
+                    xLabels={xLabels}
+                    yLabels={yLabels}
+                    xLabelsLocation={'bottom'}
+                    xLabelsVisibility={xLabelsVisibility}
+                    xLabelWidth={60}
+                    yLabelWidth={90}
+                    data={data}
+                    squares
+                    height={20}
+                    onClick={(x, y) => alert(`Clicked ${x}, ${y}`)}
+                    cellStyle={(background, value, min, max, data, x, y) => ({
+                      background: `rgb(0, 151, 230, ${1 - (max - value) / (max - min)})`,
+                      fontSize: '11.5px',
+                      color: '#444',
+                    })}
+                    //cellRender={(value) => value && <div>{value}</div>}
                   />
                 </CCol>
               </CRow>

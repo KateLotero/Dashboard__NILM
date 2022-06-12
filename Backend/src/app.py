@@ -90,6 +90,58 @@ def getbyDate3(initDay,endDay):
     print(fin-inicio) # 1.0005340576171875
     return jsonify(data)
     
+
+@app.route('/weekRange/<initDay>/<endDay>/<device>', methods = ['GET']) 
+def getWeekRange(initDay,endDay,device):
+    inicio = time.time()
+    startDay = datetime.datetime.fromisoformat(initDay)
+    finalDay = datetime.datetime.fromisoformat(endDay)
+
+    #print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
+    print('startDay',startDay,'finalDay',finalDay)
+    data = []
+
+    for doc in db.aggregate([
+    {    
+    "$match": {
+
+        '$and': [{
+            "d": {
+                "$gte":(startDay),
+                "$lte":(finalDay),
+            },
+            "deviceId":device 
+            }]
+   
+    }
+    },
+
+    {
+     "$unwind":
+      {
+        "path": "$samples",
+        "includeArrayIndex": "arrayIndex",
+        
+      }
+    },
+
+    { "$sort" : { "d" : 1, "arrayIndex": 1 } },
+    
+       
+    ]):data.append({
+        'd': doc['d'],
+        'deviceId': doc['deviceId'],
+        'samples': doc['samples'], 
+        'arrayIndex': doc['arrayIndex'], 
+                  
+            
+    })
+    #print(data)
+    fin = time.time()
+    print(fin-inicio) # 1.0005340576171875
+    return jsonify(data)
+   
+
 # get all collection data     
 @app.route('/allData', methods = ['GET']) 
 def getData():
@@ -103,7 +155,7 @@ def getData():
             'samples': doc['samples']
         })
     print(data)
-    return jsonify(data) #se retorna la lista con todos los usuarios
+    return jsonify(data) 
 
 # get all data of a specific appliance
 @app.route('/<appliance>', methods = ['GET']) #defino ruta para obtener todos los datos de la nevera
@@ -118,7 +170,7 @@ def getElectro(appliance):
             'samples': doc['samples']
         })
     print(data)
-    return jsonify(data) #se retorna la lista con todos los usuarios
+    return jsonify(data) 
 
 # demo get date range
 @app.route('/date', methods = ['GET']) 
