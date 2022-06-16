@@ -8,8 +8,7 @@ import es from 'date-fns/locale/es'
 registerLocale('es', es)
 import { registerLocale } from 'react-datepicker'
 import HeatMap from 'react-heatmap-grid'
-import moment from 'moment'
-import 'moment/locale/es'
+import { HeatMapGrid } from 'react-grid-heatmap'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
@@ -25,6 +24,7 @@ const Months = () => {
   const [infoMap, setInfoMap] = useState([])
   const [xLabelsMap, setxLabelsMap] = useState([])
   const [yLabelsMap, setyLabelsMap] = useState([])
+  const [deviceMap, setDeviceMap] = useState('Lavadora')
 
   const months = [
     'Enero',
@@ -54,7 +54,7 @@ const Months = () => {
 
   //*************************************** Data process **************************************************
 
-  // Request to the server Barchart
+  // Request to the server and data process Barchart
   async function calcRange(start, end) {
     let month1 =
       (start.getMonth() + 1).toString().length == 2
@@ -110,25 +110,20 @@ const Months = () => {
     return chart
   }
 
-  // Data Barchart first time
-  useEffect(async () => {
-    let start = new Date(2022, 0, 1)
-    let end = new Date()
-    let chart = await calcRange(start, end)
-    setInfoBar(chart)
-  }, [])
-
-  // Barchart change calendar
+  // onChange event barchart calendar
   const onChangeBar = async (dates) => {
     const [start, end] = dates
     setstartDateBar(start)
     setEndDateBar(end)
+  }
 
-    if (end) {
-      let chart = await calcRange(start, end)
+  // set data Barchart
+  useEffect(async () => {
+    if (endDateBar != null) {
+      let chart = await calcRange(startDateBar, endDateBar)
       setInfoBar(chart)
     }
-  }
+  }, [endDateBar])
 
   // Request to the server Pie
   useEffect(async () => {
@@ -196,7 +191,12 @@ const Months = () => {
     const [start, end] = dates
     setstartDateMap(start)
     setendDateMap(end)
-    if (end) {
+  }
+
+  useEffect(async () => {
+    if (endDateMap != null) {
+      let start = startDateMap
+      let end = endDateMap
       let month1 =
         (start.getMonth() + 1).toString().length == 2
           ? `${start.getMonth() + 1}`
@@ -213,7 +213,7 @@ const Months = () => {
       let date2 = `${end.getFullYear()}-${month2}-${day2}`
       console.log('date1', date1, 'date2', date2)
 
-      const dataHour = await getHour(date1, date2, 'Total')
+      const dataHour = await getHour(date1, date2, deviceMap)
       console.log('respuestaaaaaaaaaaa', dataHour)
 
       let xLabels = []
@@ -233,19 +233,7 @@ const Months = () => {
       setyLabelsMap(yLabels)
       setxLabelsMap(xLabels)
     }
-  }
-
-  useEffect(async () => {
-    let xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
-    let yLabels = ['fdsf', 'fads']
-    let data = new Array(2)
-      .fill(0)
-      .map(() => new Array(24).fill(0).map(() => Math.random() * 500 + 0.5))
-    console.log('datossunoo', data)
-    setInfoMap(data)
-    setyLabelsMap(yLabels)
-    setxLabelsMap(xLabels)
-  }, [])
+  }, [endDateMap, deviceMap])
 
   //**************************************** page ****************************************/
   return (
@@ -319,11 +307,15 @@ const Months = () => {
                   <CFormSelect
                     aria-label="Default select example"
                     options={[
-                      { label: 'Lavadora', value: '3' },
-                      { label: 'Nevera', value: '1' },
-                      { label: 'Microondas', value: '2' },
-                      { label: 'Total', value: '4' },
+                      { label: 'Lavadora', value: 'Lavadora' },
+                      { label: 'Nevera', value: 'Nevera' },
+                      { label: 'Microondas', value: 'Microondas' },
+                      { label: 'Total', value: 'Total' },
                     ]}
+                    onChange={(event) => {
+                      setDeviceMap(event.target.value)
+                      console.log(event.target.value)
+                    }}
                   />
                 </CCol>
                 <CCol>
