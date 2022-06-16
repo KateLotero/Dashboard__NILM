@@ -8,7 +8,8 @@ import es from 'date-fns/locale/es'
 registerLocale('es', es)
 import { registerLocale } from 'react-datepicker'
 import HeatMap from 'react-heatmap-grid'
-import { padding } from '@mui/system'
+import moment from 'moment'
+import 'moment/locale/es'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
@@ -21,7 +22,9 @@ const Months = () => {
   const [infoPie, setInfoPie] = useState({})
   const [startDateMap, setstartDateMap] = useState(new Date(2022, 0, 1))
   const [endDateMap, setendDateMap] = useState(new Date(2022, 0, 2))
-  const [infoMap, setInfoMap] = useState({})
+  const [infoMap, setInfoMap] = useState([])
+  const [xLabelsMap, setxLabelsMap] = useState([])
+  const [yLabelsMap, setyLabelsMap] = useState([])
 
   const months = [
     'Enero',
@@ -51,6 +54,7 @@ const Months = () => {
 
   //*************************************** Data process **************************************************
 
+  // Request to the server Barchart
   async function calcRange(start, end) {
     let month1 =
       (start.getMonth() + 1).toString().length == 2
@@ -103,12 +107,10 @@ const Months = () => {
         },
       ],
     }
-
-    //console.log('chartt', chart)
-
     return chart
   }
 
+  // Data Barchart first time
   useEffect(async () => {
     let start = new Date(2022, 0, 1)
     let end = new Date()
@@ -116,6 +118,7 @@ const Months = () => {
     setInfoBar(chart)
   }, [])
 
+  // Barchart change calendar
   const onChangeBar = async (dates) => {
     const [start, end] = dates
     setstartDateBar(start)
@@ -127,6 +130,7 @@ const Months = () => {
     }
   }
 
+  // Request to the server Pie
   useEffect(async () => {
     let month1 =
       (datePie.getMonth() + 1).toString().length == 2
@@ -163,13 +167,21 @@ const Months = () => {
     devices = devices.flat()
     data = data.flat()
 
+    /* 
+    
+      ['#A3C9A8', '#84B59F', '#69A297', '#50808E']
+      ['#1B263B', '#415A77', '#778DA9', '#E0E1DD']
+      ['#ED6A5A', '#9BC1BC', '#5CA4A9', '#415A77']
+      ['#619B8A', '#FCCA46', '#FE7F2D', '#1B263B']
+    */
+
     let chart = {
       labels: devices,
       datasets: [
         {
           data: data,
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          backgroundColor: ['#ED6A5A', '#9BC1BC', '#5CA4A9', '#415A77'],
+          hoverBackgroundColor: ['#ED6A5A', '#9BC1BC', '#5CA4A9', '#415A77'],
           animation: false,
           radius: '85%',
         },
@@ -179,23 +191,62 @@ const Months = () => {
     setInfoPie(chart)
   }, [datePie])
 
+  // Request to the server Map
   const onChangeMap = async (dates) => {
     const [start, end] = dates
     setstartDateMap(start)
     setendDateMap(end)
-  }
-  const fechas = []
-  for (let i = 0; i < fechas.length; i++) {
-    const element = fechas[i]
+    if (end) {
+      let month1 =
+        (start.getMonth() + 1).toString().length == 2
+          ? `${start.getMonth() + 1}`
+          : `0${start.getMonth() + 1}`
+      let day1 =
+        start.getDate().toString().length == 2 ? `${start.getDate()}` : `0${start.getDate()}`
+      let month2 =
+        (end.getMonth() + 1).toString().length == 2
+          ? `${end.getMonth() + 1}`
+          : `0${end.getMonth() + 1}`
+      let day2 = end.getDate().toString().length == 2 ? `${end.getDate()}` : `0${end.getDate()}`
+
+      let date1 = `${start.getFullYear()}-${month1}-${day1}`
+      let date2 = `${end.getFullYear()}-${month2}-${day2}`
+      console.log('date1', date1, 'date2', date2)
+
+      const dataHour = await getHour(date1, date2, 'Total')
+      console.log('respuestaaaaaaaaaaa', dataHour)
+
+      let xLabels = []
+      let yLabels = []
+      let data = []
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }
+
+      for (let i = 0; i < dataHour.length; i++) {
+        yLabels[i] = new Date(dataHour[i].d).toLocaleDateString('es', options)
+        data[i] = dataHour[i].avgHour
+      }
+
+      xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
+      console.log('datoss', data)
+
+      setInfoMap(data)
+      setyLabelsMap(yLabels)
+      setxLabelsMap(xLabels)
+    }
   }
 
-  const xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
-  //console.log(xLabels)
-  const xLabelsVisibility = new Array(24).fill(0).map((_, i) => true)
-  const yLabels = ['Ene 1', 'Mon', 'Tue', 'Wede', 'Thu', 'Fri', 'Sat', 'och', 'nue', 'diez']
-  const data = new Array(yLabels.length)
-    .fill(0)
-    .map(() => new Array(xLabels.length).fill(0).map(() => Math.floor(Math.random() * 100)))
+  useEffect(async () => {
+    let xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
+    let yLabels = ['fdsf', 'fads']
+    let data = new Array(2)
+      .fill(0)
+      .map(() => new Array(24).fill(0).map(() => Math.random() * 500 + 0.5))
+    console.log('datossunoo', data)
+    setInfoMap(data)
+    setyLabelsMap(yLabels)
+    setxLabelsMap(xLabels)
+  }, [])
+
   //**************************************** page ****************************************/
   return (
     <>
@@ -293,25 +344,26 @@ const Months = () => {
                   />
                 </CCol>
               </CRow>
-              <CRow className="card-body" style={{ fontSize: '8px' }}>
+              <CRow className="card-body">
                 <CCol>
                   <HeatMap
-                    xLabels={xLabels}
-                    yLabels={yLabels}
+                    xLabels={xLabelsMap}
+                    yLabels={yLabelsMap}
                     xLabelsLocation={'bottom'}
-                    xLabelsVisibility={xLabelsVisibility}
+                    //xLabelsVisibility={xLabelsVisibility}
                     xLabelWidth={60}
-                    yLabelWidth={90}
-                    data={data}
+                    yLabelWidth={150}
+                    data={infoMap}
                     squares
-                    height={20}
+                    height={22}
                     onClick={(x, y) => alert(`Clicked ${x}, ${y}`)}
                     cellStyle={(background, value, min, max, data, x, y) => ({
                       background: `rgb(0, 151, 230, ${1 - (max - value) / (max - min)})`,
-                      fontSize: '11.5px',
-                      color: '#444',
+                      //fontSize: '3px',
+                      //color: '#65049C',
                     })}
                     //cellRender={(value) => value && <div>{value}</div>}
+                    //title={(value, unit) => `${value}`}
                   />
                 </CCol>
               </CRow>

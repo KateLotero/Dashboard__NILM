@@ -32,7 +32,7 @@ CORS(app) # cors permite que el servidor de flask se comunique con el servidor d
 Database = client.get_database('prueba')
 # collection
 #db = Database.time_bucket
-db = Database.house_2
+db = Database.artificial
   
 
 #-------------Routes--------------
@@ -41,8 +41,8 @@ db = Database.house_2
 @app.route('/dateRange/<initDay>/<endDay>', methods = ['GET']) 
 def getbyDate3(initDay,endDay):
     inicio = time.time()
-    startDay = datetime.datetime.fromisoformat(initDay)
-    finalDay = datetime.datetime.fromisoformat(endDay)
+    startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
+    finalDay = datetime.datetime.fromisoformat(endDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
 
     #print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
     print('startDay',startDay,'finalDay',finalDay)
@@ -91,11 +91,11 @@ def getbyDate3(initDay,endDay):
     return jsonify(data)
     
 
-@app.route('/weekRange/<initDay>/<endDay>/<device>', methods = ['GET']) 
-def getWeekRange(initDay,endDay,device):
+@app.route('/weekRange2/<initDay>/<endDay>/<device>', methods = ['GET']) 
+def getWeekRange2(initDay,endDay,device):
     inicio = time.time()
-    startDay = datetime.datetime.fromisoformat(initDay)
-    finalDay = datetime.datetime.fromisoformat(endDay)
+    startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
+    finalDay = datetime.datetime.fromisoformat(endDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
 
     #print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
     print('startDay',startDay,'finalDay',finalDay)
@@ -141,6 +141,114 @@ def getWeekRange(initDay,endDay,device):
     print(fin-inicio) # 1.0005340576171875
     return jsonify(data)
    
+# get power by hour
+@app.route('/weekRange/<initDay>/<endDay>/<device>', methods = ['GET']) 
+def getWeekRange(initDay,endDay,device):
+    inicio = time.time()
+    startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
+    finalDay = datetime.datetime.fromisoformat(endDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
+
+    #print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
+    print('startDay',startDay,'finalDay',finalDay)
+    data = []
+
+    for doc in db.aggregate([
+    {    
+    "$match": {
+        '$and': [{
+            "d": {
+                "$gte":(startDay),
+                "$lte":(finalDay),
+            },
+            "deviceId":device 
+            }]   
+        }
+    },
+
+    {
+    "$addFields": {
+      "subarraySize": 4
+    }
+    },
+    {
+    "$addFields": {
+      "startingIndices": {
+        "$range": [
+          0,
+          {
+            "$size": "$samples"
+          },
+          "$subarraySize"
+        ]
+      }
+    }
+  },
+
+  {
+    "$project": {
+      "slicedArray": {
+        "$map": {
+          "input": "$startingIndices",
+          "as": "i",
+          "in":  {
+            "$slice": [
+              "$samples",
+              "$$i",
+              "$subarraySize",              
+            ],        
+          }
+        },
+      },
+      "d": "$d",
+      "deviceId": "$deviceId",
+      
+    }
+  }, 
+
+   {
+    "$project": {
+      "power": {
+        "$map": {
+          "input": "$slicedArray",
+          "as": "i",
+          "in":  {
+            "$map": {
+                "input":"$$i",
+                "as":"n",
+                "in": {"$avg": "$$n.power"}
+            },
+          }
+        },
+      },
+      "d": "$d",
+      "deviceId": "$deviceId",
+    }
+  }, 
+
+{
+    "$project": {
+      "avgHour": {
+        "$map": {
+          "input": "$power",
+          "as": "i",
+          "in":  { "$avg": "$$i" }
+        },
+      },
+      "d": "$d",
+      "deviceId": "$deviceId",
+    }
+  },
+    
+       
+    ]):data.append({
+        'avgHour': doc['avgHour'],
+        'd': doc['d'], 
+        'deviceId': doc['deviceId'],
+    })
+    fin = time.time()
+    print(fin-inicio) # 1.0005340576171875
+    return jsonify(data)
+      
 
 # get all collection data     
 @app.route('/allData', methods = ['GET']) 
