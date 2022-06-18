@@ -13,14 +13,16 @@
   "license": "MIT",
   "author": "The CoreUI Team (https://github.com/orgs/coreui/people)",
   "scripts": {
-    "build": "react-scripts build",
+    "build_Old": "react-scripts build",
     "changelog": "auto-changelog --starting-version 4.1.0 --commit-limit false --hide-credit",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.js\"",
-    "start": "react-scripts start",
+    "start_Old": "react-scripts start",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
-    "test:debug": "react-scripts --inspect-brk test --runInBand"
+    "test:debug": "react-scripts --inspect-brk test --runInBand",
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js"
   },
   "config": {
     "coreui_library_short_version": "4.1"
@@ -37,20 +39,29 @@
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.1",
     "@mui/x-date-pickers": "^5.0.0-alpha.4",
+    "@react-pdf/renderer": "^2.2.0",
+    "assert": "^2.0.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
     "cal-heatmap": "^3.6.2",
     "chart.js": "^3.7.1",
     "classnames": "^2.3.1",
     "core-js": "^3.21.1",
+    "process": "^0.11.10",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-app-polyfill": "^3.0.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "^17.0.2",
+    "react-grid-heatmap": "^1.2.0",
     "react-heatmap-grid": "^0.9.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.2",
     "redux": "4.1.2",
-    "simplebar-react": "^2.3.6"
+    "rewire": "^6.0.0",
+    "simplebar-react": "^2.3.6",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",

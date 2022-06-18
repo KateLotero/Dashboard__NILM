@@ -16,6 +16,7 @@ import {
   cilPeople,
   cilPhone,
   cilPuzzle,
+  cilReportSlash,
   cilSpeedometer,
   cilStar,
 } from '@coreui/icons'
@@ -34,6 +35,13 @@ const _nav = [
     name: 'Histórico de datos',
     to: '/months',
     icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavItem,
+    name: 'Reportes',
+    to: '/reports',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
 
   {

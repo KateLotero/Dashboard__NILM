@@ -20,7 +20,7 @@ const Months = () => {
   const [datePie, setDatePie] = useState(new Date())
   const [infoPie, setInfoPie] = useState({})
   const [startDateMap, setstartDateMap] = useState(new Date(2022, 0, 1))
-  const [endDateMap, setendDateMap] = useState(new Date(2022, 0, 2))
+  const [endDateMap, setendDateMap] = useState(new Date(2022, 0, 7))
   const [infoMap, setInfoMap] = useState([])
   const [xLabelsMap, setxLabelsMap] = useState([])
   const [yLabelsMap, setyLabelsMap] = useState([])
@@ -338,24 +338,37 @@ const Months = () => {
               </CRow>
               <CRow className="card-body">
                 <CCol>
-                  <HeatMap
+                  <HeatMapGrid
+                    className="card-body"
                     xLabels={xLabelsMap}
                     yLabels={yLabelsMap}
                     xLabelsLocation={'bottom'}
                     //xLabelsVisibility={xLabelsVisibility}
-                    xLabelWidth={60}
-                    yLabelWidth={150}
                     data={infoMap}
-                    squares
-                    height={22}
-                    onClick={(x, y) => alert(`Clicked ${x}, ${y}`)}
-                    cellStyle={(background, value, min, max, data, x, y) => ({
-                      background: `rgb(0, 151, 230, ${1 - (max - value) / (max - min)})`,
-                      //fontSize: '3px',
-                      //color: '#65049C',
+                    yLabelWidth={150}
+                    //squares
+                    xLabelsStyle={(index) => ({
+                      color: index % 2 ? 'transparent' : '#777',
+                      fontSize: '.90rem',
                     })}
+                    yLabelsStyle={() => ({
+                      fontSize: '.90rem',
+                      //textTransform: 'uppercase',
+                      //color: '#4f5d70',
+                    })}
+                    cellStyle={(_x, _y, ratio) => ({
+                      background: `rgb(65, 90, 119, ${ratio})`,
+                      fontSize: '.7rem',
+                      color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`,
+                    })}
+                    cellHeight="1.5rem"
+                    xLabelsPos="bottom"
+                    onClick={(x, y) => alert(`Clicked ${x}, ${y}`)}
+                    cellRender={(x, y, value) => (
+                      <div title={`Pos(${x}, ${y}) = ${value}`}>{'.'}</div>
+                    )}
                     //cellRender={(value) => value && <div>{value}</div>}
-                    //title={(value, unit) => `${value}`}
+                    //title={(x, y, value) => `${value}`}
                   />
                 </CCol>
               </CRow>

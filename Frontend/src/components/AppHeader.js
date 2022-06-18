@@ -48,6 +48,11 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
+            <CNavLink to="/reports" component={NavLink}>
+              Reportes
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
             <CNavLink to="/statis" component={NavLink}>
               Nosotros
             </CNavLink>
