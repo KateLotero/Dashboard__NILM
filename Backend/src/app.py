@@ -250,6 +250,72 @@ def getWeekRange(initDay,endDay,device):
     return jsonify(data)
       
 
+# get data to report
+@app.route('/dateReport/<initDay>/<endDay>', methods = ['GET']) 
+def getReport(initDay,endDay):
+    inicio = time.time()
+    startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
+    finalDay = datetime.datetime.fromisoformat(endDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
+
+    #print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
+    print('startDay',startDay,'finalDay',finalDay)
+    data = []
+    for doc in db.aggregate([
+    {    
+    "$match": {
+      "d": {
+        "$gte":(startDay),
+        "$lt":(finalDay),
+      }     
+    }
+    },
+
+    {
+     "$unwind": "$samples"
+    },
+
+    {
+      "$group": {
+         "_id": {  
+            "deviceId": "$deviceId",          
+               "year":{"$year": "$d"},
+               "month":{"$month": "$d"},            
+            },    
+        "average" : {"$avg": "$samples.power"},
+        "count": {"$sum":1},
+        },     
+
+    },
+
+{
+      "$group": {
+         "_id": {  
+                      
+               "year": "$_id.year",
+               "month": "$_id.month",            
+            },
+      "datos" : {"$push" : {"deviceId": "$_id.deviceId", "average" :"$average", "count": "$count"}}
+      
+      },   
+    },
+  
+
+    { "$sort" : { "_id.month": 1, "_id.year": 1 } },
+
+
+
+       
+    ]):data.append({
+            '_id': doc['_id'],
+            'datos': doc['datos'],               
+      })
+    #print(data)
+    fin = time.time()
+    print(fin-inicio) # 1.0005340576171875
+    return jsonify(data)
+    
+
+
 # get all collection data     
 @app.route('/allData', methods = ['GET']) 
 def getData():

@@ -7,7 +7,6 @@ import { addDays } from 'date-fns'
 import es from 'date-fns/locale/es'
 registerLocale('es', es)
 import { registerLocale } from 'react-datepicker'
-import HeatMap from 'react-heatmap-grid'
 import { HeatMapGrid } from 'react-grid-heatmap'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
@@ -54,62 +53,6 @@ const Months = () => {
 
   //*************************************** Data process **************************************************
 
-  // Request to the server and data process Barchart
-  async function calcRange(start, end) {
-    let month1 =
-      (start.getMonth() + 1).toString().length == 2
-        ? `${start.getMonth() + 1}`
-        : `0${start.getMonth() + 1}`
-
-    let month2 =
-      (end.getMonth() + 2).toString().length == 2
-        ? `${end.getMonth() + 2}`
-        : `0${end.getMonth() + 2}`
-    month2 = month2 == '13' ? '01' : month2
-
-    let date1 = `${start.getFullYear()}-${month1}-01`
-    let date2 = `${end.getFullYear()}-${month2}-01`
-    const fetchedAppliances = await getPastMonth(date1, date2)
-    console.log('fecha1', date1, 'fecha2', date2)
-    //console.log('respuestaaaa', fetchedAppliances)
-
-    let month = []
-    let month_ = []
-    let data = []
-    let power = 0
-    let days = 0
-
-    for (let i = 0; i < fetchedAppliances.length; i++) {
-      if (fetchedAppliances[i]._id.deviceId == 'Total') {
-        month[i] = fetchedAppliances[i]._id.month
-        power = fetchedAppliances[i].average // Potencia (W)
-        days = fetchedAppliances[i].countSamples / 96
-        data[i] = ((power * 24 * days) / 1000).toFixed(1) //Energía (kWh)
-      }
-    }
-
-    month = month.flat()
-    data = data.flat()
-
-    for (let i = 0; i < month.length; i++) {
-      month_[i] = months[month[i] - 1]
-    }
-
-    let chart = {
-      labels: month_,
-      datasets: [
-        {
-          barPercentage: 0.8,
-          label: 'Energía consumida por mes (kWh)',
-          backgroundColor: '#f87979',
-          data: data,
-          animation: false,
-        },
-      ],
-    }
-    return chart
-  }
-
   // onChange event barchart calendar
   const onChangeBar = async (dates) => {
     const [start, end] = dates
@@ -120,6 +63,64 @@ const Months = () => {
   // set data Barchart
   useEffect(async () => {
     if (endDateBar != null) {
+      // Request to the server and data process Barchart
+      async function calcRange(start, end) {
+        let month1 =
+          (start.getMonth() + 1).toString().length == 2
+            ? `${start.getMonth() + 1}`
+            : `0${start.getMonth() + 1}`
+
+        let month2 =
+          (end.getMonth() + 2).toString().length == 2
+            ? `${end.getMonth() + 2}`
+            : `0${end.getMonth() + 2}`
+        month2 = month2 == '13' ? '01' : month2
+
+        let date1 = `${start.getFullYear()}-${month1}-01`
+        let date2 = `${end.getFullYear()}-${month2}-01`
+        const fetchedAppliances = await getPastMonth(date1, date2)
+        console.log('fecha1', date1, 'fecha2', date2)
+        //console.log('respuestaaaa', fetchedAppliances)
+
+        let month = []
+        let month_ = []
+        let year = []
+        let data = []
+        let power = 0
+        let days = 0
+
+        for (let i = 0; i < fetchedAppliances.length; i++) {
+          if (fetchedAppliances[i]._id.deviceId == 'Total') {
+            month[i] = fetchedAppliances[i]._id.month
+            year[i] = fetchedAppliances[i]._id.year
+            power = fetchedAppliances[i].average // Potencia (W)
+            days = fetchedAppliances[i].countSamples / 96
+            data[i] = ((power * 24 * days) / 1000).toFixed(1) //Energía (kWh)
+          }
+        }
+
+        month = month.flat()
+        data = data.flat()
+        year = year.flat()
+
+        for (let i = 0; i < month.length; i++) {
+          month_[i] = `${months[month[i] - 1]} ${year[i]}`
+        }
+
+        let chart = {
+          labels: month_,
+          datasets: [
+            {
+              barPercentage: 0.8,
+              label: 'Energía consumida por mes (kWh)',
+              backgroundColor: '#ED6A5A',
+              data: data,
+              animation: true,
+            },
+          ],
+        }
+        return chart
+      }
       let chart = await calcRange(startDateBar, endDateBar)
       setInfoBar(chart)
     }
@@ -177,7 +178,7 @@ const Months = () => {
           data: data,
           backgroundColor: ['#ED6A5A', '#9BC1BC', '#5CA4A9', '#415A77'],
           hoverBackgroundColor: ['#ED6A5A', '#9BC1BC', '#5CA4A9', '#415A77'],
-          animation: false,
+          animation: true,
           radius: '85%',
         },
       ],
@@ -186,7 +187,7 @@ const Months = () => {
     setInfoPie(chart)
   }, [datePie])
 
-  // Request to the server Map
+  //
   const onChangeMap = async (dates) => {
     const [start, end] = dates
     setstartDateMap(start)

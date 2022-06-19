@@ -1,1 +1,17 @@
 // Here you can add other styles
+@media print {
+  .btn {
+    display: none;
+  }
+  .footer {
+    display: none;
+  }
+  /*
+  .card {
+    width: 50%;
+  }
+  
+  .printPie {
+    width: 30%;
+  }*/
+}
