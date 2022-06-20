@@ -8,6 +8,8 @@ import es from 'date-fns/locale/es'
 registerLocale('es', es)
 import { registerLocale } from 'react-datepicker'
 import { HeatMapGrid } from 'react-grid-heatmap'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
@@ -74,10 +76,14 @@ const Months = () => {
           (end.getMonth() + 2).toString().length == 2
             ? `${end.getMonth() + 2}`
             : `0${end.getMonth() + 2}`
-        month2 = month2 == '13' ? '01' : month2
+        let year2 = end.getFullYear()
+        if (month2 == '13') {
+          month2 = '01'
+          year2 = end.getFullYear() + 1
+        }
 
         let date1 = `${start.getFullYear()}-${month1}-01`
-        let date2 = `${end.getFullYear()}-${month2}-01`
+        let date2 = `${year2}-${month2}-01`
         const fetchedAppliances = await getPastMonth(date1, date2)
         console.log('fecha1', date1, 'fecha2', date2)
         //console.log('respuestaaaa', fetchedAppliances)
@@ -113,7 +119,7 @@ const Months = () => {
             {
               barPercentage: 0.8,
               label: 'Energía consumida por mes (kWh)',
-              backgroundColor: '#ED6A5A',
+              backgroundColor: '#5CA4A9',
               data: data,
               animation: true,
             },
@@ -126,7 +132,7 @@ const Months = () => {
     }
   }, [endDateBar])
 
-  // Request to the server Pie
+  // set data Piechart
   useEffect(async () => {
     let month1 =
       (datePie.getMonth() + 1).toString().length == 2
@@ -187,13 +193,14 @@ const Months = () => {
     setInfoPie(chart)
   }, [datePie])
 
-  //
+  // onChange event hitmap calendar
   const onChangeMap = async (dates) => {
     const [start, end] = dates
     setstartDateMap(start)
     setendDateMap(end)
   }
 
+  // set data hitmap
   useEffect(async () => {
     if (endDateMap != null) {
       let start = startDateMap
@@ -228,7 +235,17 @@ const Months = () => {
       }
 
       xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
-      console.log('datoss', data)
+
+      function getMinMax(data) {
+        const flatArray = data.reduce((i, o) => [...o, ...i], [])
+        const max = Math.max(...flatArray)
+        const min = Math.min(...flatArray)
+        return [min, max]
+      }
+
+      const [min, max] = getMinMax(data)
+      const minMaxDiff = max - min
+      console.log('datoss', data, 'min', min, 'max', max)
 
       setInfoMap(data)
       setyLabelsMap(yLabels)
@@ -358,15 +375,17 @@ const Months = () => {
                       //color: '#4f5d70',
                     })}
                     cellStyle={(_x, _y, ratio) => ({
-                      background: `rgb(65, 90, 119, ${ratio})`,
+                      background: `rgb(65, 90, 119, ${Math.pow(ratio, 1 / 3)})`,
                       fontSize: '.7rem',
-                      color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`,
+                      color: 'transparent',
                     })}
                     cellHeight="1.5rem"
                     xLabelsPos="bottom"
-                    onClick={(x, y) => alert(`Clicked ${x}, ${y}`)}
-                    cellRender={(x, y, value) => (
-                      <div title={`Pos(${x}, ${y}) = ${value}`}>{'.'}</div>
+                    onClick={(x, y, ratio) => alert(`Clicked ${x}, ${ratio}`)}
+                    cellRender={(x, y, value, ratio) => (
+                      <Tippy content={`Pos(${x}, ${y}) = ${value}`}>
+                        <div>.</div>
+                      </Tippy>
                     )}
                     //cellRender={(value) => value && <div>{value}</div>}
                     //title={(x, y, value) => `${value}`}

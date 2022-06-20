@@ -56,7 +56,7 @@ const Statis = React.lazy(() => import('./views/statis/Statis'))
 const Reports = React.lazy(() => import('./views/reports/Reports'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '/', name: 'Elect', element: Elect },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
