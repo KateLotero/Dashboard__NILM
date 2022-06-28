@@ -17,7 +17,9 @@ const Reports = () => {
   const [endDate, setendDate] = useState()
   const [infoTable, setInfoTable] = useState([])
   const [infoBar, setInfoBar] = useState({})
+  const [optionsBar, setOptionsBar] = useState({})
   const [infoPie, setInfoPie] = useState({})
+  const [optionsPie, setOptionsPie] = useState({})
 
   const months = [
     'Enero',
@@ -146,6 +148,26 @@ const Reports = () => {
         ],
       }
 
+      const optionBar = {
+        scales: {
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Energía (kWh)',
+              //color: '#191',
+              /*font: {
+                family: 'Times',
+                size: 20,
+                style: 'normal',
+                lineHeight: 1.2,
+              },*/
+              padding: { top: 0, left: 0, right: 0, bottom: 5 },
+            },
+          },
+        },
+      }
+
       let pie = []
       const devices = ['Lavadora', 'Microondas', 'Nevera', 'Otros']
 
@@ -172,6 +194,34 @@ const Reports = () => {
         ],
       }
 
+      const optionPie = {
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const dataset = context.dataset.data
+                let total = 0
+                for (let i = 0; i < dataset.length; i++) {
+                  total += parseFloat(dataset[i])
+                }
+                const index = context.dataIndex
+                const value = parseFloat(context.dataset.data[index]).toFixed(1)
+                const percentage = parseFloat(((value / total) * 100).toFixed(1))
+                console.log('total', total, 'percen', percentage)
+                return `${value} kWh (${percentage}%)` // agregar el label Nevera...
+              },
+              title: function (context) {
+                const index = context.dataIndex
+                console.log(context)
+                return context[0].label
+              },
+            },
+          },
+        },
+      }
+
+      setOptionsBar(optionBar)
+      setOptionsPie(optionPie)
       setInfoPie(pieChart)
       setInfoBar(barChart)
       setInfoTable(data)
@@ -181,107 +231,111 @@ const Reports = () => {
   return (
     <>
       <CCard>
-        <CCardHeader>Periodo del reporte</CCardHeader>
         <CCardBody>
-          <CRow>
-            <CCol md={10} sm={6} xs={6}>
-              <DatePicker
-                className="form-select"
-                selected={startDate}
-                startDate={startDate}
-                endDate={endDate}
-                onChange={onChangeDate}
-                dateFormat="MMMM yyyy"
-                //maxDate={[addDays(new Date(), -1), addDays(startDate, 7)]}
-                //excludeDates={[addDays(startDate, 7)]}
-                placeholderText="Selecciona un rango"
-                //dateFormat="Pp"
-                locale="es"
-                showMonthYearPicker
-                selectsRange
-                //shouldCloseOnSelect={false}
-              />
-            </CCol>
-            <CCol md={2} sm={6} xs={6}>
-              <CButton
-                color="secondary"
-                onClick={() => {
-                  setFetchData(!fetchData)
-                  setGenerateReport(true)
-                }}
-              >
-                Generar reporte
-              </CButton>
-            </CCol>
-          </CRow>
+          <CCard>
+            <CCardHeader>Periodo del reporte</CCardHeader>
+            <CCardBody>
+              <CRow>
+                <CCol md={9} sm={6} xs={6}>
+                  <DatePicker
+                    className="form-select"
+                    selected={startDate}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={onChangeDate}
+                    dateFormat="MMMM yyyy"
+                    //maxDate={[addDays(new Date(), -1), addDays(startDate, 7)]}
+                    //excludeDates={[addDays(startDate, 7)]}
+                    placeholderText="Selecciona un rango"
+                    //dateFormat="Pp"
+                    locale="es"
+                    showMonthYearPicker
+                    selectsRange
+                    //shouldCloseOnSelect={false}
+                  />
+                </CCol>
+                <CCol md={3} sm={6} xs={6}>
+                  <CButton
+                    color="secondary"
+                    onClick={() => {
+                      setFetchData(!fetchData)
+                      setGenerateReport(true)
+                    }}
+                  >
+                    Generar reporte
+                  </CButton>
+                </CCol>
+              </CRow>
+            </CCardBody>
+          </CCard>
+
+          {generateReport == true ? (
+            <CCard>
+              <CCardHeader>
+                <CRow>
+                  <CCol md={10} sm={10} xs={10}>
+                    Reporte
+                  </CCol>
+                  <CCol md={2} sm={2} xs={2} className="text-end">
+                    <CButton
+                      color="secondary"
+                      size="sm"
+                      onClick={() => {
+                        window.print()
+                      }}
+                    >
+                      Imprimir
+                    </CButton>
+                  </CCol>
+                </CRow>
+              </CCardHeader>
+              <CCardBody>
+                <CRow>
+                  <CCol md={8} sm={8} xs={12}>
+                    <CChartBar data={infoBar} options={optionsBar} />
+                  </CCol>
+
+                  <CCol md={4} sm={4} xs={12}>
+                    <CChartDoughnut data={infoPie} options={optionsPie} />
+                  </CCol>
+                </CRow>
+                <CRow>
+                  <CCol className="mt-4">
+                    <CCard>
+                      <CCardBody>
+                        <table className="table table-hover">
+                          <thead>
+                            <tr>
+                              <CTableHeaderCell scope="col">Mes</CTableHeaderCell>
+                              <CTableHeaderCell scope="col">Lavadora (kWh)</CTableHeaderCell>
+                              <CTableHeaderCell scope="col">Microondas (kWh)</CTableHeaderCell>
+                              <CTableHeaderCell scope="col">Nevera (kWh)</CTableHeaderCell>
+                              <CTableHeaderCell scope="col">Otros (kWh)</CTableHeaderCell>
+                              <CTableHeaderCell scope="col">Total (kWh)</CTableHeaderCell>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {infoTable.map((row) => (
+                              <tr key={row.x}>
+                                <td>{row.x}</td>
+                                <td>{row.Lavadora}</td>
+                                <td>{row.Microondas}</td>
+                                <td>{row.Nevera}</td>
+                                <td>{row.Otros}</td>
+                                <td>{row.Total}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </CCardBody>
+                    </CCard>
+                  </CCol>
+                </CRow>
+              </CCardBody>
+            </CCard>
+          ) : null}
         </CCardBody>
       </CCard>
-
-      {generateReport == true ? (
-        <CCard>
-          <CCardHeader>
-            <CRow>
-              <CCol md={10} sm={10} xs={10}>
-                Reporte
-              </CCol>
-              <CCol md={2} sm={2} xs={2} className="text-end">
-                <CButton
-                  color="secondary"
-                  size="sm"
-                  onClick={() => {
-                    window.print()
-                  }}
-                >
-                  Imprimir
-                </CButton>
-              </CCol>
-            </CRow>
-          </CCardHeader>
-          <CCardBody>
-            <CRow>
-              <CCol md={8} sm={8} xs={12}>
-                <CChartBar data={infoBar} />
-              </CCol>
-
-              <CCol md={4} sm={4} xs={12}>
-                <CChartDoughnut data={infoPie} />
-              </CCol>
-            </CRow>
-            <CRow>
-              <CCol className="mt-4">
-                <CCard>
-                  <CCardBody>
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <CTableHeaderCell scope="col">Mes</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Lavadora (kWh)</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Microondas (kWh)</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Nevera (kWh)</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Otros (kWh)</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Total (kWh)</CTableHeaderCell>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {infoTable.map((row) => (
-                          <tr key={row.x}>
-                            <td>{row.x}</td>
-                            <td>{row.Lavadora}</td>
-                            <td>{row.Microondas}</td>
-                            <td>{row.Nevera}</td>
-                            <td>{row.Otros}</td>
-                            <td>{row.Total}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            </CRow>
-          </CCardBody>
-        </CCard>
-      ) : null}
     </>
   )
 }

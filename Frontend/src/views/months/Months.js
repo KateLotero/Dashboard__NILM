@@ -20,6 +20,7 @@ const Months = () => {
   const [infoBar, setInfoBar] = useState({})
   const [datePie, setDatePie] = useState(new Date())
   const [infoPie, setInfoPie] = useState({})
+  const [optionsPie, setOptionsPie] = useState({})
   const [startDateMap, setstartDateMap] = useState(new Date(2022, 0, 1))
   const [endDateMap, setendDateMap] = useState(new Date(2022, 0, 7))
   const [infoMap, setInfoMap] = useState([])
@@ -177,7 +178,7 @@ const Months = () => {
       ['#619B8A', '#FCCA46', '#FE7F2D', '#1B263B']
     */
 
-    let chart = {
+    var chart = {
       labels: devices,
       datasets: [
         {
@@ -189,7 +190,36 @@ const Months = () => {
         },
       ],
     }
+    console.log('dataaaaaaa', data)
+
+    const option = {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const dataset = context.dataset.data
+              let total = 0
+              for (let i = 0; i < dataset.length; i++) {
+                total += parseFloat(dataset[i])
+              }
+              const index = context.dataIndex
+              const value = parseFloat(context.dataset.data[index])
+              const percentage = parseFloat(((value / total) * 100).toFixed(1))
+              console.log('total', total, 'percen', percentage)
+              return `${value} kWh (${percentage}%)` // agregar el label Nevera...
+            },
+            title: function (context) {
+              const index = context.dataIndex
+              console.log(context)
+              return context[0].label
+            },
+          },
+        },
+      },
+    }
+
     //console.log('devices', devices, 'data', data)
+    setOptionsPie(option)
     setInfoPie(chart)
   }, [datePie])
 
@@ -293,7 +323,7 @@ const Months = () => {
             <CCardBody>
               <CRow>
                 <CCol xs={12} sm={6} md={6}>
-                  <CChartPie data={infoPie} />
+                  <CChartPie data={infoPie} options={optionsPie} />
                 </CCol>
                 <CCol xs={12} sm={2} md={2}></CCol>
 
@@ -381,15 +411,16 @@ const Months = () => {
                     })}
                     cellHeight="1.5rem"
                     xLabelsPos="bottom"
-                    onClick={(x, y, ratio) => alert(`Clicked ${x}, ${ratio}`)}
+                    //onClick={(x, y, ratio) => alert(`Clicked ${x}, ${ratio}`)}
                     cellRender={(x, y, value, ratio) => (
-                      <Tippy content={`Pos(${x}, ${y}) = ${value}`}>
+                      <Tippy content={`${value} kWh`}>
                         <div>.</div>
                       </Tippy>
                     )}
                     //cellRender={(value) => value && <div>{value}</div>}
                     //title={(x, y, value) => `${value}`}
                   />
+                  <p className="text-center">Horas</p>
                 </CCol>
               </CRow>
             </CCardBody>
