@@ -45,12 +45,12 @@ const Months = () => {
 
   //*************************************** requests to the server *************************************/
   const getPastMonth = (date1, date2) =>
-    fetch(`${API}/dateRange/${date1}/${date2}`)
+    fetch(`${API}/powerDateRange/${date1}/${date2}`)
       .then((res) => res.json())
       .catch((error) => console.error('Error:', error))
 
   const getHour = (date1, date2, device) =>
-    fetch(`${API}/weekRange/${date1}/${date2}/${device}`)
+    fetch(`${API}/powerHour/${date1}/${date2}/${device}`)
       .then((res) => res.json())
       .catch((error) => console.error('Error:', error))
 

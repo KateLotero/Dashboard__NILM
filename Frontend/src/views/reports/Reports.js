@@ -39,7 +39,7 @@ const Reports = () => {
   //*************************************** requests to the server *************************************/
 
   const getData = (date1, date2) =>
-    fetch(`${API}/dateReport/${date1}/${date2}`)
+    fetch(`${API}/powerMonthReport/${date1}/${date2}`)
       .then((res) => res.json())
       .catch((error) => console.error('Error:', error))
 

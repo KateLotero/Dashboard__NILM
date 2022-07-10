@@ -38,8 +38,8 @@ db = Database.UsuarioUno
 #-------------Routes--------------
 
 # get data of date range
-@app.route('/dateRange/<initDay>/<endDay>', methods = ['GET']) 
-def getbyDate3(initDay,endDay):
+@app.route('/powerDateRange/<initDay>/<endDay>', methods = ['GET']) 
+def getPowerDataRange(initDay,endDay):
     inicio = time.time()
     startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
     finalDay = datetime.datetime.fromisoformat(endDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
@@ -90,60 +90,9 @@ def getbyDate3(initDay,endDay):
     print(fin-inicio) # 1.0005340576171875
     return jsonify(data)
     
-
-@app.route('/weekRange2/<initDay>/<endDay>/<device>', methods = ['GET']) 
-def getWeekRange2(initDay,endDay,device):
-    inicio = time.time()
-    startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
-    finalDay = datetime.datetime.fromisoformat(endDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
-
-    #print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
-    print('startDay',startDay,'finalDay',finalDay)
-    data = []
-
-    for doc in db.aggregate([
-    {    
-    "$match": {
-
-        '$and': [{
-            "d": {
-                "$gte":(startDay),
-                "$lte":(finalDay),
-            },
-            "deviceId":device 
-            }]
-   
-    }
-    },
-
-    {
-     "$unwind":
-      {
-        "path": "$samples",
-        "includeArrayIndex": "arrayIndex",
-        
-      }
-    },
-
-    { "$sort" : { "d" : 1, "arrayIndex": 1 } },
-    
-       
-    ]):data.append({
-        'd': doc['d'],
-        'deviceId': doc['deviceId'],
-        'samples': doc['samples'], 
-        'arrayIndex': doc['arrayIndex'], 
-                  
-            
-    })
-    #print(data)
-    fin = time.time()
-    print(fin-inicio) # 1.0005340576171875
-    return jsonify(data)
-   
 # get power by hour
-@app.route('/weekRange/<initDay>/<endDay>/<device>', methods = ['GET']) 
-def getWeekRange(initDay,endDay,device):
+@app.route('/powerHour/<initDay>/<endDay>/<device>', methods = ['GET']) 
+def getPowerByHour(initDay,endDay,device):
     inicio = time.time()
     startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
     finalDay = datetime.datetime.fromisoformat(endDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
@@ -251,7 +200,7 @@ def getWeekRange(initDay,endDay,device):
       
 
 # get data to report
-@app.route('/dateReport/<initDay>/<endDay>', methods = ['GET']) 
+@app.route('/powerMonthReport/<initDay>/<endDay>', methods = ['GET']) 
 def getReport(initDay,endDay):
     inicio = time.time()
     startDay = datetime.datetime.fromisoformat(initDay).replace(hour = 5, minute = 0, second=0, microsecond=0)
@@ -314,88 +263,6 @@ def getReport(initDay,endDay):
     print(fin-inicio) # 1.0005340576171875
     return jsonify(data)
     
-
-
-# get all collection data     
-@app.route('/allData', methods = ['GET']) 
-def getData():
-    data = [] 
-    for doc in db.find(): # con un for recorro los documentos de la base de datos y se extrae la info
-        data.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'd': doc['d'],
-            'deviceId': doc['deviceId'],
-            'nsamples': doc['nsamples'],
-            'samples': doc['samples']
-        })
-    print(data)
-    return jsonify(data) 
-
-# get all data of a specific appliance
-@app.route('/<appliance>', methods = ['GET']) #defino ruta para obtener todos los datos de la nevera
-def getElectro(appliance):
-    data = [] 
-    for doc in db.find({'deviceId': appliance}): 
-        data.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'd': doc['d'],
-            'deviceId': doc['deviceId'],
-            'nsamples': doc['nsamples'],
-            'samples': doc['samples']
-        })
-    print(data)
-    return jsonify(data) 
-
-# demo get date range
-@app.route('/date', methods = ['GET']) 
-def getbyDate():
-    startDay = datetime.datetime.fromisoformat(request.json['startDay'])
-    finalDay = datetime.datetime.fromisoformat(request.json['finalDay']+' 23:59:59')
-
-    print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
-    print('startDay',startDay,'finalDay',finalDay)
-    data = []
-    for doc in db.find({
-    'd': {
-        "$gte":(startDay),
-        "$lte":(finalDay),
-    }
-    }):data.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'd': doc['d'],
-            'deviceId': doc['deviceId'],
-            'nsamples': doc['nsamples'],
-            'samples': doc['samples']
-        })
-    print(data)
-    return jsonify(data)
-
-# demo2 get date range
-@app.route('/pastMonth/<initDay>/<endDay>', methods = ['GET']) 
-def getbyDate2(initDay,endDay):
-    inicio = time.time()
-    startDay = datetime.datetime.fromisoformat(initDay)
-    finalDay = datetime.datetime.fromisoformat(endDay)
-
-    #print('json',request.json) #vamos a imprimir los datos en formato json que el cliente o navegador está enviando
-    print('startDay',startDay,'finalDay',finalDay)
-    data = []
-    for doc in db.find({
-    'd': {
-        "$gte":(startDay),
-        "$lt":(finalDay),
-    }
-    }):data.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'd': doc['d'],
-            'deviceId': doc['deviceId'],
-            'nsamples': doc['nsamples'],
-            'samples': doc['samples']
-        })
-    print(data)
-    fin = time.time()
-    print(fin-inicio) # 1.0005340576171875
-    return jsonify(data)
 
 
 

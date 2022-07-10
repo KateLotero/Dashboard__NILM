@@ -47,7 +47,7 @@ const Elect = () => {
   //*************************************** requests to the server *************************************/
 
   const getPastMonth = () =>
-    fetch(`${API}/dateRange/${date1}/${date2}`)
+    fetch(`${API}/powerDateRange/${date1}/${date2}`)
       .then((res) => res.json())
       .catch((error) => console.error('Error:', error))
 
