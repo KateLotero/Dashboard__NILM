@@ -42,7 +42,7 @@ import {
   cilUserFemale,
 } from '@coreui/icons'
 
-import diagram from './../../assets/images/diagram.jpg'
+import diagram from './../../assets/images/Diagrama.png'
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import avatar2 from 'src/assets/images/avatars/2.jpg'
 import avatar3 from 'src/assets/images/avatars/3.jpg'
@@ -119,30 +119,36 @@ const Statis = () => {
           <CCard>
             <CCardHeader>¿Qué es NIX?</CCardHeader>
             <CCardBody>
-              <p>
-                NIX es un sistema basado en NILM (monitoreo no invasivo de carga), que a través de
-                un medidor inteligente captura el consumo total de energía y luego, lo procesa para
-                estimar el consumo eléctrico de cargas desagregadas, en este caso electrodomésticos,
-                de manera no invasiva. Este sistema le permite al usuario conocer el consumo de
-                energía total o individual de los electrodomésticos, al igual que su tiempo de uso.
-                Esta información permite conocer las tendencias de consumo del usuario, diseñar un
-                plan de gestión de la demanda y validar su impacto sobre el uso eficiente de la
-                energía. A continuación, se muestra el diagrama general del sistema:
-              </p>
+              <CRow>
+                <CCol xs={6}>
+                  <p>
+                    <small>
+                      NIX es un sistema basado en NILM (monitoreo no invasivo de carga). Este
+                      sistema le permite al usuario conocer el consumo de energía total o individual
+                      de los electrodomésticos. El diagrama general del sistema muestra las etapas
+                      que permiten desagregar el consumo de energía de cada electrodoméstico. En
+                      este caso, el proceso de desagregación se realiza a través de una red neuronal
+                      LSTM. Los datos resultantes, se almacenan en una base de datos que es
+                      consultada por la aplicación web, dependiendo de las peticiones del usuario.
+                    </small>
+                  </p>
 
-              <div className="text-center border" style={{ margin: '2rem' }}>
-                <CCardImage
-                  orientation="bottom"
-                  src={diagram}
-                  style={{ height: '30rem', width: '40rem' }}
-                />
-              </div>
-
-              <p>
-                En este caso, el proceso de desagregación se realiza a través de una red neuronal
-                LSTM, los datos resultantes de este proceso se almacenan en una base de datos que es
-                consultada por la aplicación web.
-              </p>
+                  <p>
+                    <small>
+                      Con esta información, por un lado, los usuarios pueden tomar decisiones
+                      encaminadas al uso eficiente de energía. Por otro lado, las empresas
+                      prestadoras del servicio pueden identificar las tendencias de consumo del
+                      usuario, diseñar un plan de gestión de la demanda y ajustar los planes de
+                      generación de energía.
+                    </small>
+                  </p>
+                </CCol>
+                <CCol xs={6}>
+                  <div className="text-center border">
+                    <img src={diagram} className="img-fluid" alt="Responsive image"></img>
+                  </div>
+                </CCol>
+              </CRow>
             </CCardBody>
           </CCard>
         </CCol>
@@ -153,32 +159,36 @@ const Statis = () => {
           <CCard>
             <CCardHeader>Sobre nosotros</CCardHeader>
             <CCardBody>
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
-                  <CTableRow>
-                    <CTableHeaderCell className="text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
-                    <CTableHeaderCell>Nosotros</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {tableExample.map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={item.avatar.src} status={item.avatar.status} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{item.user.name}</div>
-                        <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered:{' '}
-                          {item.user.registered}
-                        </div>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
+              <CRow>
+                <CCol>
+                  <small>
+                    Nix se desarrolló en el marco del proyecto P14-SÉNECA-MICRORREDES, que hace
+                    parte del Programa para la Sostenibilidad Energética de Colombia, a través del
+                    trabajo de grado{' '}
+                    <em>
+                      Sistema para la desagregación de perfiles de carga usando técnicas de
+                      inteligencia computacional a través del monitoreo no invasivo de carga
+                    </em>
+                    ; a cargo de Katerine Lotero Londoño y Pablo Andrés Uribe Agudelo. El trabajo
+                    contó con la dirección de los profesores Wilfredo Alfonso y Jenniffer Guerrero,
+                    y la asesoría del ingeniero James Gaviria.
+                  </small>
+                </CCol>
+
+                <CCol>
+                  <p className="mt-1">
+                    <small>
+                      <strong>Contáctanos</strong>
+                    </small>
+                  </p>
+                  <p className="mt-2">
+                    <small>katerine.lotero@correounivalle.edu.co</small>
+                  </p>
+                  <p className="mt-2">
+                    <small>pablo.uribe@correounivalle.edu.co</small>
+                  </p>
+                </CCol>
+              </CRow>
             </CCardBody>
           </CCard>
         </CCol>

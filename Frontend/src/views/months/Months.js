@@ -87,7 +87,7 @@ const Months = () => {
         let date2 = `${year2}-${month2}-01`
         const fetchedAppliances = await getPastMonth(date1, date2)
         console.log('fecha1', date1, 'fecha2', date2)
-        //console.log('respuestaaaa', fetchedAppliances)
+        console.log('respuestaaaa', fetchedAppliances)
 
         let month = []
         let month_ = []
@@ -103,6 +103,7 @@ const Months = () => {
             power = fetchedAppliances[i].average // Potencia (W)
             days = fetchedAppliances[i].countSamples / 96
             data[i] = ((power * 24 * days) / 1000).toFixed(1) //Energía (kWh)
+            //console.log('power', power)
           }
         }
 
@@ -190,7 +191,7 @@ const Months = () => {
         },
       ],
     }
-    console.log('dataaaaaaa', data)
+    //console.log('dataaaaaaa', data)
 
     const option = {
       plugins: {
@@ -205,12 +206,12 @@ const Months = () => {
               const index = context.dataIndex
               const value = parseFloat(context.dataset.data[index])
               const percentage = parseFloat(((value / total) * 100).toFixed(1))
-              console.log('total', total, 'percen', percentage)
+              //console.log('total', total, 'percen', percentage)
               return `${value} kWh (${percentage}%)` // agregar el label Nevera...
             },
             title: function (context) {
               const index = context.dataIndex
-              console.log(context)
+              //console.log(context)
               return context[0].label
             },
           },
@@ -249,19 +250,21 @@ const Months = () => {
 
       let date1 = `${start.getFullYear()}-${month1}-${day1}`
       let date2 = `${end.getFullYear()}-${month2}-${day2}`
-      console.log('date1', date1, 'date2', date2)
+      //console.log('date1', date1, 'date2', date2)
 
       const dataHour = await getHour(date1, date2, deviceMap)
-      console.log('respuestaaaaaaaaaaa', dataHour)
+      //console.log('respuestaaaaaaaaaaa', dataHour)
 
       let xLabels = []
       let yLabels = []
       let data = []
       const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }
+      const aux = 0
 
       for (let i = 0; i < dataHour.length; i++) {
         yLabels[i] = new Date(dataHour[i].d).toLocaleDateString('es', options)
-        data[i] = dataHour[i].avgHour
+        aux = dataHour[i].avgHour
+        data[i] = aux.toFixed(1)
       }
 
       xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
@@ -275,7 +278,7 @@ const Months = () => {
 
       const [min, max] = getMinMax(data)
       const minMaxDiff = max - min
-      console.log('datoss', data, 'min', min, 'max', max)
+      //console.log('datoss', data, 'min', min, 'max', max)
 
       setInfoMap(data)
       setyLabelsMap(yLabels)
@@ -362,7 +365,7 @@ const Months = () => {
                     ]}
                     onChange={(event) => {
                       setDeviceMap(event.target.value)
-                      console.log(event.target.value)
+                      //console.log(event.target.value)
                     }}
                   />
                 </CCol>

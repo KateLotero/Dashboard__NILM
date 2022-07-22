@@ -21,7 +21,8 @@ password = os.getenv('PASSWORD')
 # ------------------Instantiation-------------------------------
 
 connection_url = 'mongodb+srv://'+userName+':'+password+'@cluster0.fs6sz.mongodb.net/users?retryWrites=true&w=majority'
-print(connection_url)
+print('Successful connection to')
+print('mongodb+srv://user:password@cluster0.fs6sz.mongodb.net/users?retryWrites=true&w=majority')
 app = Flask (__name__) # inicializar flask
 
 client = pymongo.MongoClient(connection_url)
@@ -32,7 +33,7 @@ CORS(app) # cors permite que el servidor de flask se comunique con el servidor d
 Database = client.get_database('prueba')
 # collection
 #db = Database.time_bucket
-db = Database.UsuarioUno
+db = Database.UsuarioDos
   
 
 #-------------Routes--------------
@@ -264,6 +265,23 @@ def getReport(initDay,endDay):
     return jsonify(data)
     
 
+
+
+
+
+@app.route('/<appliance>', methods = ['GET']) #defino ruta para obtener todos los datos de la nevera
+def getElectro(appliance):
+    data = [] 
+    for doc in db.find({'deviceId': appliance}): 
+        data.append({
+            '_id': str(ObjectId(doc['_id'])),
+            'd': doc['d'],
+            'deviceId': doc['deviceId'],
+            'nsamples': doc['nsamples'],
+            'samples': doc['samples']
+        })
+    print(data)
+    return jsonify(data) 
 
 
 if __name__== "__main__":

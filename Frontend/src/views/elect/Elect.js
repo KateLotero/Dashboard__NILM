@@ -20,6 +20,21 @@ import { imageListItemClasses } from '@mui/material'
 
 const images = { Nevera, Microondas, Lavadora, Otros }
 
+const months = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+]
+
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
 
@@ -27,6 +42,7 @@ const Elect = () => {
   /*************************************** constants *************************************/
 
   const [dataCards, setDataCards] = useState([])
+  const [monthTitle, setMonthTitle] = useState('')
 
   console.time('loop')
 
@@ -41,8 +57,8 @@ const Elect = () => {
   pastMonth = pastMonth == '00' ? '12' : pastMonth
   let date1 = `${date.getFullYear()}-${pastMonth}-01`
   let date2 = `${date.getFullYear()}-${actualMonth}-01`
-  date1 = '2022-01-01'
-  date2 = '2022-02-01'
+  //date1 = '2022-01-01'
+  //date2 = '2022-02-01'
 
   //*************************************** requests to the server *************************************/
 
@@ -79,8 +95,13 @@ const Elect = () => {
         data.push({ device, power_kWh, price, image })
       }
     }
+
+    const d = new Date()
+    let name = months[d.getMonth() - 1]
+
     console.timeEnd('loop')
     setDataCards(data)
+    setMonthTitle(name)
   }, [])
 
   console.log('cardsss', dataCards)
@@ -94,7 +115,7 @@ const Elect = () => {
             <CCardHeader>
               {' '}
               <center>
-                <h5>Consumo de energía en el mes anterior</h5>
+                <h5>Consumo de energía en el mes de {monthTitle}</h5>
               </center>
             </CCardHeader>
             <CRow>
