@@ -46,7 +46,7 @@ This directory is made up of two jupyter notebooks. On the one hand, Nix_Core ha
 
 Bbackend_to_MongoDB('2022-01-01')
 
-On the other hand, BBackend_Final shows how a model is obtained, in this case, for the fridge. A similar approach can be used for the microwave and the washing machine.
+On the other hand, BBackend_Final shows how a model is obtained, in this case, for the fridge. A similar approach can be used for the microwave and the washing machine. We share the best models for the fridge, washer and microwave as .hdf5 files.
 
 ### API 
 This directory contains the API developed on Flask. 
