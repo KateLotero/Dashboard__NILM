@@ -15,27 +15,27 @@ For the desegregation process, we implement an LSTM using Keras. The API was dev
 .
 ├── API
 │   └── src
-│       ├── app.py
-│       └── requirements.txt
+│       ├── app.py            # API to get data from Mongo
+│       └── requirements.txt  # packages for virtual environment
 ├── Frontend
-│    ├── src/             # Frontend root
-│    │   ├── assets/      # images, icons, etc.
-│    │   ├── components/  # common components - header, footer, sidebar, etc.
-│    │   ├── layouts/     # layout containers
-│    │   ├── scss/        # scss styles
-│    │   ├── views/       # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
-│    │   ├── _nav.js      # sidebar navigation config
+│    ├── src/                 # Frontend root
+│    │   ├── assets/          # images, icons, etc.
+│    │   ├── components/      # common components - header, footer, sidebar, etc.
+│    │   ├── layouts/         # layout containers
+│    │   ├── scss/            # scss styles
+│    │   ├── views/           # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
+│    │   ├── _nav.js          # sidebar navigation config
 │    │   ├── App.js
 │    │   ├── ...
 │    │   ├── index.js
-│    │   ├── routes.js    # routes config
-│    │   └── store.js     # template state example 
+│    │   ├── routes.js        # routes config
+│    │   └── store.js         # template state example 
 │    │
 │    └── package.json
 │
 ├── Model_LSTM
-│   ├── BBackend_Final.ipynb
-│   └── Nix_Core.ipynb
+│   ├── BBackend_Final.ipynb  # Neural Networks LSTM models 
+│   └── Nix_Core.ipynb        # Mongo connection to save data
 
 ```
 
@@ -54,7 +54,7 @@ This directory contains the API developed on Flask.
 1. Create a virtual environment in the API/src folder, where the requirement.txt is
 2. Activate the virtual environment
 3. Install the used packages: pip install -r requirements.txt
-4. Create an .env with Mongo credentials.
+4. Create an .env with Mongo credentials.\\
      PASSWORD = password
      USERK = user
 5. Run the app with python app.py
