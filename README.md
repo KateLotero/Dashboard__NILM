@@ -1,6 +1,6 @@
 # Dashboard__NILM
 
-This project is a dashboard oriented to NILM (Non-Intrusive Load Monitoring). On this dashboard, called Nix, the user can monitor the energy consumption of three devices: the washing machine, microwave, and fridge. The user can select different dates and obtain the consumption in a month or per hour for each device.
+This project is called Nix, a dashboard oriented to NILM (Non-Intrusive Load Monitoring). On this dashboard, the user can monitor the energy consumption of three devices: the washing machine, microwave, and fridge. The user can select different dates and obtain the consumption in a month or per hour for each device.
 
 This project is divided in three parts. Firstly, a stage to desegregate the total power consumption through a LSTM neural network, saving the results in MongoDB Atlas. Secondly, an API that makes the queries to MongoDB Atlas, and finally, a web application to show the user different graphs about their electricity consumption. 
 
