@@ -9,7 +9,37 @@ For the desegregation process, we implement an LSTM using Keras. The API was dev
 ![](static/example.png)
 
 
-## Instalation 
+## Installation 
+
+``` bash
+.
+├── API
+│   └── src
+│       ├── app.py
+│       └── requirements.txt
+├── Frontend
+|    ├── src/             # Frontend root
+|    │   ├── assets/      # images, icons, etc.
+|    │   ├── components/  # common components - header, footer, sidebar, etc.
+|    │   ├── layouts/     # layout containers
+|    │   ├── scss/        # scss styles
+|    │   ├── views/       # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
+|    │   ├── _nav.js      # sidebar navigation config
+|    │   ├── App.js
+|    │   ├── ...
+|    │   ├── index.js
+|    │   ├── routes.js    # routes config
+|    │   └── store.js     # template state example 
+|    │
+|    └── package.json
+|
+├── Model_LSTM
+│   ├── BBackend_Final.ipynb
+│   └── Nix_Core.ipynb
+
+``
+
+
 ### Model_LSTM
 
 This directory is made up of two jupyter notebooks. On the one hand, Nix_Core has the main function that allows connection to MongoDB Atlas. For this, it is necessary to provide the location of the trained models and the data to be analyzed, the latter is also built in this notebook. The addresses can be changed by the end user and to carry out a test it is only necessary to define a start date, like this:
