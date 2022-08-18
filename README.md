@@ -12,3 +12,5 @@ This directory is composed of two jupyter notebooks, in Nix_Core is the main fun
 
 Bbackend_to_MongoDB('2022-01-01')
 
+On the other hand, BBackend_Final shows how a model is obtained, in this case, for the fridge. A similar approach can be used for the microwave and the washing machine.
+
