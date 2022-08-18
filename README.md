@@ -58,7 +58,7 @@ This directory contains the API developed on Flask.
 1. Create a virtual environment in the API/src folder, where the requirement.txt is
 2. Activate the virtual environment
 3. Install the used packages: pip install -r requirements.txt
-4. Create an .env with Mongo credentials.\r
+4. Create an .env with Mongo credentials.
      PASSWORD = password
      USERK = user
 5. Run the app with python app.py
