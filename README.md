@@ -18,21 +18,21 @@ For the desegregation process, we implement an LSTM using Keras. The API was dev
 │       ├── app.py
 │       └── requirements.txt
 ├── Frontend
-|    ├── src/             # Frontend root
-|    │   ├── assets/      # images, icons, etc.
-|    │   ├── components/  # common components - header, footer, sidebar, etc.
-|    │   ├── layouts/     # layout containers
-|    │   ├── scss/        # scss styles
-|    │   ├── views/       # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
-|    │   ├── _nav.js      # sidebar navigation config
-|    │   ├── App.js
-|    │   ├── ...
-|    │   ├── index.js
-|    │   ├── routes.js    # routes config
-|    │   └── store.js     # template state example 
-|    │
-|    └── package.json
-|
+│    ├── src/             # Frontend root
+│    │   ├── assets/      # images, icons, etc.
+│    │   ├── components/  # common components - header, footer, sidebar, etc.
+│    │   ├── layouts/     # layout containers
+│    │   ├── scss/        # scss styles
+│    │   ├── views/       # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
+│    │   ├── _nav.js      # sidebar navigation config
+│    │   ├── App.js
+│    │   ├── ...
+│    │   ├── index.js
+│    │   ├── routes.js    # routes config
+│    │   └── store.js     # template state example 
+│    │
+│    └── package.json
+│
 ├── Model_LSTM
 │   ├── BBackend_Final.ipynb
 │   └── Nix_Core.ipynb
