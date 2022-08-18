@@ -23,7 +23,11 @@ For the desegregation process, we implement an LSTM using Keras. The API was dev
 │    │   ├── components/      # common components - header, footer, sidebar, etc.
 │    │   ├── layouts/         # layout containers
 │    │   ├── scss/            # scss styles
-│    │   ├── views/           # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
+│    │   ├── views/           # application views 
+│    │   │   ├── about/       # about us
+│    │   │   ├── elect/       # last month consumption
+│    │   │   ├── months/      # consumption per month and per hour for each device
+│    │   │   ├── reports/     # reports
 │    │   ├── _nav.js          # sidebar navigation config
 │    │   ├── App.js
 │    │   ├── ...
