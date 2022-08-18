@@ -55,7 +55,7 @@ import { width } from '@mui/system'
 const API = process.env.REACT_APP_API //Call the environment var to connect with Flask
 console.log(API) // print server address
 
-const Statis = () => {
+const About = () => {
   const [dataPies1, setDataPies1] = useState([])
   const [dataPies2, setDataPies2] = useState([])
 
@@ -196,4 +196,4 @@ const Statis = () => {
     </>
   )
 }
-export default Statis
+export default About

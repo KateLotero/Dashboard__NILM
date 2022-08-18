@@ -52,7 +52,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const Elect = React.lazy(() => import('./views/elect/Elect'))
 const Months = React.lazy(() => import('./views/months/Months'))
-const Statis = React.lazy(() => import('./views/statis/Statis'))
+const About = React.lazy(() => import('./views/about/About'))
 const Reports = React.lazy(() => import('./views/reports/Reports'))
 
 const routes = [
@@ -108,7 +108,7 @@ const routes = [
 
   { path: '/elect', name: 'Elect', element: Elect },
   { path: '/months', name: 'Months', element: Months },
-  { path: '/statis', name: 'Statis', element: Statis },
+  { path: '/about', name: 'About', element: About },
   { path: '/reports', name: 'Reports', element: Reports },
 ]
 
