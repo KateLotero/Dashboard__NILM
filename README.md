@@ -28,6 +28,7 @@ For the desegregation process, we implement an LSTM using Keras. The API was dev
 │    │   │   ├── elect/       # last month consumption
 │    │   │   ├── months/      # consumption per month and per hour for each device
 │    │   │   ├── reports/     # user-generated reports in PDF
+│    │   │   ├── ...
 │    │   ├── _nav.js          # sidebar navigation config
 │    │   ├── App.js
 │    │   ├── ...
