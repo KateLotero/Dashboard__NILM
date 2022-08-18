@@ -1,6 +1,6 @@
 # Dashboard__NILM
 
-This project is a dashboard oriented to NILM (Non-Intrusive Load Monitoring). On the dashboard, the user can monitor the energy consumption of three devices: the washing machine, microwave, and fridge. The user can select different dates and obtain the consumption in a month or per hour for each device.
+This project is a dashboard oriented to NILM (Non-Intrusive Load Monitoring). On this dashboard, called Nix, the user can monitor the energy consumption of three devices: the washing machine, microwave, and fridge. The user can select different dates and obtain the consumption in a month or per hour for each device.
 
 This project is divided in three parts. Firstly, a stage to desegregate the total power consumption through a LSTM neural network, saving the results in MongoDB Atlas. Secondly, an API that makes the queries to MongoDB Atlas, and finally, a web application to show the user different graphs about their electricity consumption. 
 
@@ -18,21 +18,21 @@ For the desegregation process, we implement an LSTM using Keras. The API was dev
 │       ├── app.py
 │       └── requirements.txt
 ├── Frontend
-|    ├── src/             # Frontend root
-|    │   ├── assets/      # images, icons, etc.
-|    │   ├── components/  # common components - header, footer, sidebar, etc.
-|    │   ├── layouts/     # layout containers
-|    │   ├── scss/        # scss styles
-|    │   ├── views/       # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
-|    │   ├── _nav.js      # sidebar navigation config
-|    │   ├── App.js
-|    │   ├── ...
-|    │   ├── index.js
-|    │   ├── routes.js    # routes config
-|    │   └── store.js     # template state example 
-|    │
-|    └── package.json
-|
+│    ├── src/             # Frontend root
+│    │   ├── assets/      # images, icons, etc.
+│    │   ├── components/  # common components - header, footer, sidebar, etc.
+│    │   ├── layouts/     # layout containers
+│    │   ├── scss/        # scss styles
+│    │   ├── views/       # application views (Months.js: consumption per month and per hour, Reports.js, Elect.js: consumption last month, Statis.js)
+│    │   ├── _nav.js      # sidebar navigation config
+│    │   ├── App.js
+│    │   ├── ...
+│    │   ├── index.js
+│    │   ├── routes.js    # routes config
+│    │   └── store.js     # template state example 
+│    │
+│    └── package.json
+│
 ├── Model_LSTM
 │   ├── BBackend_Final.ipynb
 │   └── Nix_Core.ipynb
