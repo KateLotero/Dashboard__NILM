@@ -28,6 +28,7 @@ For the desegregation process, we implement an LSTM using Keras. The API was dev
 │    │   │   ├── elect/       # last month consumption
 │    │   │   ├── months/      # consumption per month and per hour for each device
 │    │   │   ├── reports/     # user-generated reports in PDF
+│    │   │   ├── ...
 │    │   ├── _nav.js          # sidebar navigation config
 │    │   ├── App.js
 │    │   ├── ...
@@ -58,7 +59,7 @@ This directory contains the API developed on Flask.
 1. Create a virtual environment in the API/src folder, where the requirement.txt is
 2. Activate the virtual environment
 3. Install the used packages: pip install -r requirements.txt
-4. Create an .env with Mongo credentials.\\
+4. Create an .env with Mongo credentials.
      PASSWORD = password
      USERK = user
 5. Run the app with python app.py
