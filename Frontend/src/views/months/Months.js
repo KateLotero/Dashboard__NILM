@@ -253,18 +253,23 @@ const Months = () => {
       //console.log('date1', date1, 'date2', date2)
 
       const dataHour = await getHour(date1, date2, deviceMap)
-      //console.log('respuestaaaaaaaaaaa', dataHour)
+      console.log('respuestaaaaaaaaaaa', dataHour)
 
       let xLabels = []
       let yLabels = []
       let data = []
       const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }
-      const aux = 0
+      let aux = []
 
       for (let i = 0; i < dataHour.length; i++) {
         yLabels[i] = new Date(dataHour[i].d).toLocaleDateString('es', options)
         aux = dataHour[i].avgHour
-        data[i] = aux.toFixed(1)
+        for (let j = 0; j < aux.length; j++) {
+          aux[j] = aux[j].toFixed(1)
+        }
+        data[i] = aux
+
+        //data[i] = Number(Number(aux).toFixed(1))
       }
 
       xLabels = new Array(24).fill(0).map((_, i) => `${i}`)
@@ -276,8 +281,6 @@ const Months = () => {
         return [min, max]
       }
 
-      const [min, max] = getMinMax(data)
-      const minMaxDiff = max - min
       //console.log('datoss', data, 'min', min, 'max', max)
 
       setInfoMap(data)
@@ -416,7 +419,7 @@ const Months = () => {
                     xLabelsPos="bottom"
                     //onClick={(x, y, ratio) => alert(`Clicked ${x}, ${ratio}`)}
                     cellRender={(x, y, value, ratio) => (
-                      <Tippy content={`${value} kWh`}>
+                      <Tippy content={`${value} Wh`}>
                         <div>.</div>
                       </Tippy>
                     )}
