@@ -69,9 +69,6 @@ This directory contains the web application's source code.
 2. Run npm start
 3. Dev server with hot reload at http://localhost:3000
 
-## Credits
-    [CoreUI Pro React Admin Template](https://coreui.io/pro/react). 
-    Perfil de Pablo
 
 ## License
 
