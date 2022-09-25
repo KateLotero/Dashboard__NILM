@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  backend: 
+    build: API/src/.
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: Frontend/.
+    ports:
+      - "3000:3000"
+    
+    
+  
+
+
+    
+
+
