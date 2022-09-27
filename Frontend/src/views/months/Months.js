@@ -263,9 +263,11 @@ const Months = () => {
 
       for (let i = 0; i < dataHour.length; i++) {
         yLabels[i] = new Date(dataHour[i].d).toLocaleDateString('es', options)
+
+        // power approximation
         aux = dataHour[i].avgHour
         for (let j = 0; j < aux.length; j++) {
-          aux[j] = aux[j].toFixed(1)
+          aux[j] = aux[j]< 0 ? 0 : aux[j].toFixed(1)          
         }
         data[i] = aux
 
