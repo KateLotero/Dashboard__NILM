@@ -88,7 +88,7 @@ def getPowerDataRange(initDay,endDay):
         })
     #print(data)
     fin = time.time()
-    print(fin-inicio) # 1.0005340576171875
+    print("Tiempo de consulta: ", fin-inicio, "s") # 1.0005340576171875
     return jsonify(data)
     
 # get power by hour
@@ -196,7 +196,7 @@ def getPowerByHour(initDay,endDay,device):
         'deviceId': doc['deviceId'],
     })
     fin = time.time()
-    print(fin-inicio) # 1.0005340576171875
+    print("Tiempo de consulta: ", fin-inicio, "s") # 1.0005340576171875
     return jsonify(data)
       
 
@@ -261,7 +261,7 @@ def getReport(initDay,endDay):
       })
     #print(data)
     fin = time.time()
-    print(fin-inicio) # 1.0005340576171875
+    print("Tiempo de consulta: ", fin-inicio, "s") # 1.0005340576171875
     return jsonify(data)
     
 

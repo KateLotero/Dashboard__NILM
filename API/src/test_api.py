@@ -31,21 +31,21 @@ class ApiTest(unittest.TestCase):
     DATA_HOUR = "{}/powerHour/{}/{}/{}".format(API_URL, INIT_DAY, END_DAY, DEVICE)
     DATA_REPORT = "{}/powerMonthReport/{}/{}".format(API_URL, INIT_DAY, END_DAY)
     
-    # Check if the response is 200
+    """ # Check if the response is 200
     def test1_api(self):
         tester = app.test_client(self)
         response = tester.get("/fo")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200) """
 
     #  Check if content returned is json
-    def test2_content(self):
+    def test1_content(self):
         tester = app.test_client(self)
         response = tester.get("/fo")
         self.assertEqual(response.content_type, "application/json")
 
     # Check GET request to /powerDateRange/<initDay>/<endDay> return data in a date range
     # Check if the number of elements returned is 5 (Lavadora, Microondas, Nevera, Otros y Total) in month (January)
-    def test3_getDateRange(self):
+    def test2_getDateRange(self):
         tester = app.test_client(self)
         response = tester.get(self.DATA_RANGE)
         self.assertEqual(response.status_code, 200)
@@ -54,7 +54,7 @@ class ApiTest(unittest.TestCase):
 
     # Check GET request to /powerHour/<initDay>/<endDay>/<device> return power data by hour
     # Check if the number of elements returned is 31 (31 days in January)
-    def test4_getDateHour(self):
+    def test3_getDateHour(self):
         tester = app.test_client(self)
         response = tester.get(self.DATA_HOUR)
         self.assertEqual(response.status_code, 200)
@@ -63,7 +63,7 @@ class ApiTest(unittest.TestCase):
 
     # Check GET request to /powerMonthReport/<initDay>/<endDay> return power data by month  
     # Check if the number of elements returned is 5 (Lavadora, Microondas, Nevera, Otros y Total) in month (January)
-    def test5_getDataReport(self):
+    def test4_getDataReport(self):
         tester = app.test_client(self)
         response = tester.get(self.DATA_REPORT)
         self.assertEqual(response.status_code, 200)
